@@ -1,0 +1,12 @@
+// gl_polyoffset - a decal wallhack
+// 
+// Setting gl_polyoffset was used to
+// let the game draw decals such as 
+// shots, blood sprites or spray logos
+// behind the wall. This could be abused
+// to enhance your wallbang opportunities.
+\n
+gl_polyoffset "10000";
+\n
+// It was later fixed, so you couldn't set
+// arbitrary values anymore.

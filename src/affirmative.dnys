@@ -1,0 +1,87 @@
+# AquaShell Counter-Strike Retroboard 'Affirmative' sound manager script file
+
+const iBtnAffirmativePosX int <= 45;
+const iBtnAffirmativePosY int <= 135;
+const iBtnAffirmativeWidth int <= 190;
+const iBtnAffirmativeHeight int <= 45;
+const iTxtAffirmativeX int <= 59;
+const iTxtAffirmativeY int <= 145;
+const szLabelAffirmative string <= "AFFIRMATIVE";
+
+global hSprAffirmative int;
+global hSndAffirmative int;
+
+function checkButtonHovered_affirmative bool(btnx int, btny int, btnw int, btnh int)
+{
+	result false;
+	
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnAffirmativePosX;
+	set chkbtnheight <= %iBtnAffirmativePosY;
+
+	+= chkbtnwidth %iBtnAffirmativeWidth;
+	+= chkbtnheight %iBtnAffirmativeHeight;
+
+	if (%iMouseXPos, -gr, %iBtnAffirmativePosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnAffirmativePosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function checkButtonClicked_affirmative void(btnx int, btny int, btnw int, btnh int, callback string)
+{
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnAffirmativePosX;
+	set chkbtnheight <= %iBtnAffirmativePosY;
+
+	+= chkbtnwidth %iBtnAffirmativeWidth;
+	+= chkbtnheight %iBtnAffirmativeHeight;
+
+	if (%iMouseXPos, -gr, %iBtnAffirmativePosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnAffirmativePosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					dx.snd.play %hSndAffirmative %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
+
+function drawButton_affirmative void()
+{
+	local iTxtColorRed int;
+	local iTxtColorGreen int;
+	local iTxtColorBlue int;
+	local bButtonHovered bool;
+	
+	set iTxtColorRed <= 250;
+	set iTxtColorGreen <= 250;
+	set iTxtColorBlue <= 250;
+	
+	dx.gfx.drawsprite %hSprAffirmative %iBtnAffirmativePosX %iBtnAffirmativePosY 0 0.0 0.0 false 0 0 0 0;
+	
+	call checkButtonHovered_affirmative(%iBtnAffirmativePosX, %iBtnAffirmativePosY, %iBtnAffirmativeWidth, %iBtnAffirmativeHeight) => bButtonHovered;
+	if (%bButtonHovered, -eq, true) {
+		set iTxtColorRed <= 255;
+		set iTxtColorGreen <= 255;
+		set iTxtColorBlue <= 255;
+	};
+	
+	dx.gfx.drawstring %hDefFont "%szLabelAffirmative" %iTxtAffirmativeX %iTxtAffirmativeY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
+};
+
+function loadAssets_affirmative void()
+{
+    dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnAffirmativeWidth %iBtnAffirmativeHeight 1 false hSprAffirmative;
+    dx.snd.query "%szSoundPath/affirmative.wav" hSndAffirmative;
+};

@@ -1,0 +1,227 @@
+# AquaShell Counter-Strike Retroboard main script file
+
+require "array";
+require "auto";
+require "dx.window";
+require "dx.graphics";
+require "dx.sound";
+require "strings";
+
+#hideconsole;
+
+const WND_RES_X int <= 1024;
+const WND_RES_Y int <= 768;
+const INVALID_DX_HANDLE int <= -1;
+const GLOBAL_VOLUME int <= 10;
+const MAX_WELCOME_SOUNDS int <= 3;
+const INFO_WEBSITE string <= "www.aquashell-scripting.com";
+
+global szScriptPath string;
+global szSpritePath string;
+global szSoundPath string;
+global szConfigsPath string;
+global bDxValid bool;
+global hDefFont int;
+global hInfoFont int;
+global hBanner int;
+global hSndWelcome int;
+global iMouseXPos int;
+global iMouseYPos int;
+global bLinkHover bool;
+global iLinkXPos int;
+global iLinkYPos int;
+global iLinkWidth int;
+global iLinkHeight int;
+global bRunDrawOnce bool;
+
+array arrSoundScriptItems string 1 (
+	"affirmative"
+);
+
+getscriptpath szScriptPath;
+
+set szSpritePath <= {%szScriptPath..\assets\sprites};
+set szSoundPath <= {%szScriptPath..\assets\sounds};
+set szConfigsPath <= {%szScriptPath..\assets\configs};
+
+for (i, 0, %arrSoundScriptItems.length, -inc) {
+	exec "%szScriptPath/%arrSoundScriptItems[%i].dnys";
+};
+
+exec "%szScriptPath/configs.dnys";
+exec "%szScriptPath/maps.dnys";
+
+set iLinkXPos <= 390;
+set iLinkYPos <= 723;
+set iLinkWidth <= 235;
+set iLinkHeight <= -15;
+
+set bRunDrawOnce <= false;
+
+function PlayWelcomeSound_OnElapsed bool()
+{
+	dx.snd.play %hSndWelcome %GLOBAL_VOLUME;
+
+	result false;
+};
+
+function checkLinkRange bool()
+{
+	result false;
+
+	local corrlnkx int;
+	local corrlnky int;
+	local chklnkwidth int;
+	local chklnkheight int;
+
+	set corrlnkx <= %iLinkXPos;
+	set corrlnky <= %iLinkYPos;
+	set chklnkwidth <= %iLinkXPos;
+	set chklnkheight <= %iLinkYPos;
+
+	-= corrlnkx 5;
+	-= corrlnky 50;
+	+= chklnkwidth %iLinkWidth;
+	+= chklnkheight %iLinkHeight;
+
+	if (%iMouseXPos, -gr, %corrlnkx) {
+		if (%iMouseXPos, -ls, %chklnkwidth) {
+			if (%iMouseYPos, -gr, %corrlnky) {
+				if (%iMouseYPos, -ls, %chklnkheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function DXWND_OnCreate void(hWnd int)
+{
+    local bGfxInit bool;
+	local iRndNumber int;
+
+    debug "Window handle: %hWnd";
+
+    dx.gfx.initialize %hWnd %WND_WINDOWED %WND_RES_X %WND_RES_Y 0 0 0 0 bGfxInit;
+    dx.snd.initialize %hWnd;
+
+    dx.gfx.loadfont "Verdana" 12 25 hDefFont;
+	dx.gfx.loadfont "Verdana" 8 20 hInfoFont;
+	
+	dx.gfx.setbgimage "%szSpritePath/background.png";
+	dx.gfx.loadsprite "%szSpritePath/banner.png" 1 %WND_RES_X 96 1 false hBanner;
+
+	for (i, 0, %arrSoundScriptItems.length, -inc) {
+		call loadAssets_%arrSoundScriptItems[%i]() => void;
+	};
+
+	call loadConfigItem("%szConfigsPath") => void;
+	call loadMapShowcase("%szSpritePath\maps") => void;
+
+	random 1 %MAX_WELCOME_SOUNDS iRndNumber;
+	dx.snd.query "%szSoundPath/welcome%iRndNumber.wav" hSndWelcome;
+
+    debug "DX.Graphics and DX.Sound initialized";
+};
+
+function DXWND_OnDraw void()
+{
+	local iLinkColorRed int;
+	local iLinkColorGreen int;
+	local iLinkColorBlue int;
+	local iLinkUnderlineX int;
+	local iLinkUnderlineY int;
+
+    dx.gfx.drawbegin;
+
+	if (%bRunDrawOnce, -eq, false) {
+		set bRunDrawOnce <= true;
+
+		aut_addtimer PlayWelcomeSound 1000;
+	};
+
+	dx.gfx.drawsprite %hBanner 0 0 0 0.0 0.0 false 0 0 0 0;
+	
+	for (i, 0, %arrSoundScriptItems.length, -inc) {
+		call drawButton_%arrSoundScriptItems[%i]() => void;
+	};
+
+	call drawConfigLines() => void;
+	call drawMapShowcase() => void;
+
+	call checkLinkRange() => bLinkHover;
+	if (%bLinkHover, -eq, true) {
+		set iLinkColorRed <= 255;
+		set iLinkColorGreen <= 185;
+		set iLinkColorBlue <= 90;
+	} else {
+		set iLinkColorRed <= 255;
+		set iLinkColorGreen <= 165;
+		set iLinkColorBlue <= 70;
+	};
+
+	dx.gfx.drawstring %hInfoFont "This project is fan-made and is not affiliated with Valve or Steam" 250 693 255 255 255 255;
+	dx.gfx.drawstring %hInfoFont %INFO_WEBSITE %iLinkXPos %iLinkYPos %iLinkColorRed %iLinkColorGreen %iLinkColorBlue 255;
+
+	if (%bLinkHover, -eq, true) {
+		set iLinkUnderlineX <= %iLinkXPos;
+		set iLinkUnderlineY <= %iLinkYPos;
+
+		+= iLinkUnderlineY 22;
+
+		dx.gfx.drawfilledbox %iLinkUnderlineX %iLinkUnderlineY 245 1 %iLinkColorRed %iLinkColorGreen %iLinkColorBlue 255;
+	};
+
+    dx.gfx.drawend;
+};
+
+function DXWND_OnKeyInput void(vKey int, bDown bool, bCtrlHeld bool, bShiftHeld bool, bAltHeld bool)
+{
+};
+
+function DXWND_OnMouseInput void(x int, y int, iMouseKey int, bDown bool, bCtrlHeld bool, bShiftHeld bool, bAltHeld bool)
+{
+	local bInLinkRange bool;
+
+	if (%iMouseKey, -eq, 0) {
+		set iMouseXPos <= %x;
+		set iMouseYPos <= %y;
+	} elseif (%iMouseKey, -eq, 1) {
+		if (%bDown, -eq, false) {
+			for (i, 0, %arrSoundScriptItems.length, -inc) {
+				call checkButtonClicked_%arrSoundScriptItems[%i]() => void;
+			};
+
+			call checkLinkRange() => bInLinkRange;
+			if (%bInLinkRange, -eq, true) {
+				sys "start https://%INFO_WEBSITE";
+			};
+		};
+	};
+};
+
+function DXWND_OnDestroy void()
+{
+    debug "Window destroyed";
+
+    dx.gfx.release;
+    dx.snd.release;
+};
+
+dx.wnd.set_event "OnCreate" DXWND_OnCreate;
+dx.wnd.set_event "OnDraw" DXWND_OnDraw;
+dx.wnd.set_event "OnKeyInput" DXWND_OnKeyInput;
+dx.wnd.set_event "OnMouseInput" DXWND_OnMouseInput;
+dx.wnd.set_event "OnDestroy" DXWND_OnDestroy;
+
+dx.wnd.initialize "AquaBoard: Counter-Strike Retroboard" %WND_RES_X %WND_RES_Y;
+
+dx.wnd.is_valid bDxValid;
+
+while (%bDxValid, -eq, true) {
+	aut_calctimers;
+    dx.wnd.process;
+    dx.wnd.is_valid bDxValid;
+};
+
+dx.wnd.release;

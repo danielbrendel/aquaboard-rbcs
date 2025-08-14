@@ -1,0 +1,42 @@
+# AquaShell Counter-Strike Retroboard maps showcase manager script file
+
+const MAPS_WINDOW_POSX int <= 50;
+const MAPS_WINDOW_POSY int <= 435;
+
+global hCurrentMap int;
+global iCurrentMap int;
+global hMapsFont int;
+
+array arrMapsItems string 1 (
+	"fy_iceworld"
+);
+
+function loadMapShowcase void(mapsBasePath string)
+{
+    random 1 arrMapsItems.length iCurrentMap;
+    -- iCurrentMap;
+
+    dx.gfx.loadsprite "%mapsBasePath\%arrMapsItems[%iCurrentMap].png" 1 350 197 1 false hCurrentMap;
+    
+    dx.gfx.loadfont "Verdana" 8 20 hMapsFont;
+};
+
+function drawMapShowcase void()
+{
+    local txtposx int;
+    local txtposy int;
+    local txtwidth int;
+
+    set txtposx <= %MAPS_WINDOW_POSX;
+    set txtposy <= %MAPS_WINDOW_POSY;
+
+    += txtposx 5;
+    += txtposy 5;
+
+    s_getlen "%arrMapsItems[%iCurrentMap]" txtwidth;
+    *= txtwidth 10;
+
+    dx.gfx.drawsprite %hCurrentMap %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY 0 0.0 0.0 false 0 0 0 0;
+    dx.gfx.drawfilledbox %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY %txtwidth 32 0 0 0 255;
+    dx.gfx.drawstring %hMapsFont "%arrMapsItems[%iCurrentMap]" %txtposx %txtposy 255 255 255 255;
+};

@@ -1,0 +1,53 @@
+# AquaShell Counter-Strike Retroboard config sources manager script file
+
+const CONFIGS_WINDOW_POSX int <= 600;
+const CONFIGS_WINDOW_POSY int <= 135;
+const CONFIGS_WINDOW_WIDTH int <= 400;
+const CONFIGS_WINDOW_HEIGHT int <= 500;
+const CONFIGS_WINDOW_BORDER_SIZE int <= 6;
+
+global hConfigFont int;
+
+array arrConfigItems string 1 (
+    "polyoffset"
+);
+
+function loadConfigItem void(configBasePath string)
+{
+    local iRndConfigItem int;
+    local configContent string;
+
+    random 1 arrConfigItems.length iRndConfigItem;
+    -- iRndConfigItem;
+
+    sys {type "%configBasePath\%arrConfigItems[%iRndConfigItem].txt"} configContent;
+    s_tokenize "%configContent" "%CR%LF" arrSplittedConfigLines;
+
+    for (j, 0, %arrSplittedConfigLines.count, -inc) {
+        s_replace arrSplittedConfigLines[%j] {\n} " ";
+    };
+    
+    dx.gfx.loadfont "Verdana" 8 20 hConfigFont;
+};
+
+function drawConfigLines void()
+{
+    local curposx int;
+    local curposy int;
+
+    set curposx <= %CONFIGS_WINDOW_POSX;
+    set curposy <= %CONFIGS_WINDOW_POSY;
+
+    += curposx 20;
+    += curposy 20;
+
+    dx.gfx.drawfilledbox %CONFIGS_WINDOW_POSX %CONFIGS_WINDOW_POSY %CONFIGS_WINDOW_WIDTH %CONFIGS_WINDOW_HEIGHT 62 70 55 150;
+    dx.gfx.drawbox %CONFIGS_WINDOW_POSX %CONFIGS_WINDOW_POSY %CONFIGS_WINDOW_WIDTH %CONFIGS_WINDOW_HEIGHT %CONFIGS_WINDOW_BORDER_SIZE 79 89 69 150;
+
+    for (i, 0, %arrSplittedConfigLines.count, -inc) {
+        dx.gfx.drawstring %hConfigFont "%arrSplittedConfigLines[%i]" %curposx %curposy 255 255 255 255;
+
+        += curposx 0;
+        += curposy 30;
+    };
+};
