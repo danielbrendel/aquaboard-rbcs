@@ -1,0 +1,87 @@
+# AquaShell Counter-Strike Retroboard 'Spotted' sound manager script file
+
+const iBtnSpottedPosX int <= 265;
+const iBtnSpottedPosY int <= 135;
+const iBtnSpottedWidth int <= 190;
+const iBtnSpottedHeight int <= 45;
+const iTxtSpottedX int <= 309;
+const iTxtSpottedY int <= 145;
+const szLabelSpotted string <= "SPOTTED";
+
+global hSprSpotted int;
+global hSndSpotted int;
+
+function checkButtonHovered_spotted bool(btnx int, btny int, btnw int, btnh int)
+{
+	result false;
+	
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnSpottedPosX;
+	set chkbtnheight <= %iBtnSpottedPosY;
+
+	+= chkbtnwidth %iBtnSpottedWidth;
+	+= chkbtnheight %iBtnSpottedHeight;
+
+	if (%iMouseXPos, -gr, %iBtnSpottedPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnSpottedPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function checkButtonClicked_spotted void(btnx int, btny int, btnw int, btnh int, callback string)
+{
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnSpottedPosX;
+	set chkbtnheight <= %iBtnSpottedPosY;
+
+	+= chkbtnwidth %iBtnSpottedWidth;
+	+= chkbtnheight %iBtnSpottedHeight;
+
+	if (%iMouseXPos, -gr, %iBtnSpottedPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnSpottedPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					dx.snd.play %hSndSpotted %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
+
+function drawButton_spotted void()
+{
+	local iTxtColorRed int;
+	local iTxtColorGreen int;
+	local iTxtColorBlue int;
+	local bButtonHovered bool;
+	
+	set iTxtColorRed <= 250;
+	set iTxtColorGreen <= 250;
+	set iTxtColorBlue <= 250;
+	
+	dx.gfx.drawsprite %hSprSpotted %iBtnSpottedPosX %iBtnSpottedPosY 0 0.0 0.0 false 0 0 0 0;
+	
+	call checkButtonHovered_spotted(%iBtnSpottedPosX, %iBtnSpottedPosY, %iBtnSpottedWidth, %iBtnSpottedHeight) => bButtonHovered;
+	if (%bButtonHovered, -eq, true) {
+		set iTxtColorRed <= 255;
+		set iTxtColorGreen <= 255;
+		set iTxtColorBlue <= 255;
+	};
+	
+	dx.gfx.drawstring %hDefFont "%szLabelSpotted" %iTxtSpottedX %iTxtSpottedY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
+};
+
+function loadAssets_spotted void()
+{
+    dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnSpottedWidth %iBtnSpottedHeight 1 false hSprSpotted;
+    dx.snd.query "%szSoundPath/spotted.wav" hSndSpotted;
+};

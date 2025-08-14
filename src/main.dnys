@@ -34,8 +34,9 @@ global iLinkWidth int;
 global iLinkHeight int;
 global bRunDrawOnce bool;
 
-array arrSoundScriptItems string 1 (
-	"affirmative"
+array arrSoundScriptItems string 2 (
+	"affirmative",
+	"spotted"
 );
 
 getscriptpath szScriptPath;
