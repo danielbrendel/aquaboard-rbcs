@@ -45,7 +45,7 @@ function drawConfigLines void()
     dx.gfx.drawbox %CONFIGS_WINDOW_POSX %CONFIGS_WINDOW_POSY %CONFIGS_WINDOW_WIDTH %CONFIGS_WINDOW_HEIGHT %CONFIGS_WINDOW_BORDER_SIZE 79 89 69 150;
 
     for (i, 0, %arrSplittedConfigLines.count, -inc) {
-        dx.gfx.drawstring %hConfigFont "%arrSplittedConfigLines[%i]" %curposx %curposy 255 255 255 255;
+        dx.gfx.drawstring %hConfigFont "%arrSplittedConfigLines[%i]" %curposx %curposy 200 200 200 255;
 
         += curposx 0;
         += curposy 30;
