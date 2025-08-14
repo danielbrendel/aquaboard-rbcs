@@ -34,8 +34,9 @@ global iLinkWidth int;
 global iLinkHeight int;
 global bRunDrawOnce bool;
 
-array arrSoundScriptItems string 2 (
+array arrSoundScriptItems string 3 (
 	"affirmative",
+	"assistance",
 	"spotted"
 );
 
