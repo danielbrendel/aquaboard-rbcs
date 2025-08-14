@@ -1,0 +1,87 @@
+# AquaShell Counter-Strike Retroboard 'Report' sound manager script file
+
+const iBtnReportPosX int <= 45;
+const iBtnReportPosY int <= 265;
+const iBtnReportWidth int <= 190;
+const iBtnReportHeight int <= 45;
+const iTxtReportX int <= 90;
+const iTxtReportY int <= 275;
+const szLabelReport string <= "REPORT";
+
+global hSprReport int;
+global hSndReport int;
+
+function checkButtonHovered_report bool(btnx int, btny int, btnw int, btnh int)
+{
+	result false;
+	
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnReportPosX;
+	set chkbtnheight <= %iBtnReportPosY;
+
+	+= chkbtnwidth %iBtnReportWidth;
+	+= chkbtnheight %iBtnReportHeight;
+
+	if (%iMouseXPos, -gr, %iBtnReportPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnReportPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function checkButtonClicked_report void(btnx int, btny int, btnw int, btnh int, callback string)
+{
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnReportPosX;
+	set chkbtnheight <= %iBtnReportPosY;
+
+	+= chkbtnwidth %iBtnReportWidth;
+	+= chkbtnheight %iBtnReportHeight;
+
+	if (%iMouseXPos, -gr, %iBtnReportPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnReportPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					dx.snd.play %hSndReport %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
+
+function drawButton_report void()
+{
+	local iTxtColorRed int;
+	local iTxtColorGreen int;
+	local iTxtColorBlue int;
+	local bButtonHovered bool;
+	
+	set iTxtColorRed <= 250;
+	set iTxtColorGreen <= 250;
+	set iTxtColorBlue <= 250;
+	
+	dx.gfx.drawsprite %hSprReport %iBtnReportPosX %iBtnReportPosY 0 0.0 0.0 false 0 0 0 0;
+	
+	call checkButtonHovered_report(%iBtnReportPosX, %iBtnReportPosY, %iBtnReportWidth, %iBtnReportHeight) => bButtonHovered;
+	if (%bButtonHovered, -eq, true) {
+		set iTxtColorRed <= 255;
+		set iTxtColorGreen <= 255;
+		set iTxtColorBlue <= 255;
+	};
+	
+	dx.gfx.drawstring %hDefFont "%szLabelReport" %iTxtReportX %iTxtReportY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
+};
+
+function loadAssets_report void()
+{
+    dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnReportWidth %iBtnReportHeight 1 false hSprReport;
+    dx.snd.query "%szSoundPath/report.wav" hSndReport;
+};

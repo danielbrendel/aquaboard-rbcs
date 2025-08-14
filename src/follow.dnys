@@ -1,0 +1,87 @@
+# AquaShell Counter-Strike Retroboard 'Follow' sound manager script file
+
+const iBtnFollowPosX int <= 45;
+const iBtnFollowPosY int <= 200;
+const iBtnFollowWidth int <= 190;
+const iBtnFollowHeight int <= 45;
+const iTxtFollowX int <= 90;
+const iTxtFollowY int <= 209;
+const szLabelFollow string <= "FOLLOW";
+
+global hSprFollow int;
+global hSndFollow int;
+
+function checkButtonHovered_follow bool(btnx int, btny int, btnw int, btnh int)
+{
+	result false;
+	
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnFollowPosX;
+	set chkbtnheight <= %iBtnFollowPosY;
+
+	+= chkbtnwidth %iBtnFollowWidth;
+	+= chkbtnheight %iBtnFollowHeight;
+
+	if (%iMouseXPos, -gr, %iBtnFollowPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnFollowPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function checkButtonClicked_follow void(btnx int, btny int, btnw int, btnh int, callback string)
+{
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnFollowPosX;
+	set chkbtnheight <= %iBtnFollowPosY;
+
+	+= chkbtnwidth %iBtnFollowWidth;
+	+= chkbtnheight %iBtnFollowHeight;
+
+	if (%iMouseXPos, -gr, %iBtnFollowPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnFollowPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					dx.snd.play %hSndFollow %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
+
+function drawButton_follow void()
+{
+	local iTxtColorRed int;
+	local iTxtColorGreen int;
+	local iTxtColorBlue int;
+	local bButtonHovered bool;
+	
+	set iTxtColorRed <= 250;
+	set iTxtColorGreen <= 250;
+	set iTxtColorBlue <= 250;
+	
+	dx.gfx.drawsprite %hSprFollow %iBtnFollowPosX %iBtnFollowPosY 0 0.0 0.0 false 0 0 0 0;
+	
+	call checkButtonHovered_follow(%iBtnFollowPosX, %iBtnFollowPosY, %iBtnFollowWidth, %iBtnFollowHeight) => bButtonHovered;
+	if (%bButtonHovered, -eq, true) {
+		set iTxtColorRed <= 255;
+		set iTxtColorGreen <= 255;
+		set iTxtColorBlue <= 255;
+	};
+	
+	dx.gfx.drawstring %hDefFont "%szLabelFollow" %iTxtFollowX %iTxtFollowY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
+};
+
+function loadAssets_follow void()
+{
+    dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnFollowWidth %iBtnFollowHeight 1 false hSprFollow;
+    dx.snd.query "%szSoundPath/follow.wav" hSndFollow;
+};

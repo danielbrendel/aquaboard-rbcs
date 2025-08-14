@@ -1,0 +1,87 @@
+# AquaShell Counter-Strike Retroboard 'Sector' sound manager script file
+
+const iBtnSectorPosX int <= 45;
+const iBtnSectorPosY int <= 330;
+const iBtnSectorWidth int <= 190;
+const iBtnSectorHeight int <= 45;
+const iTxtSectorX int <= 90;
+const iTxtSectorY int <= 340;
+const szLabelSector string <= "SECTOR";
+
+global hSprSector int;
+global hSndSector int;
+
+function checkButtonHovered_sector bool(btnx int, btny int, btnw int, btnh int)
+{
+	result false;
+	
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnSectorPosX;
+	set chkbtnheight <= %iBtnSectorPosY;
+
+	+= chkbtnwidth %iBtnSectorWidth;
+	+= chkbtnheight %iBtnSectorHeight;
+
+	if (%iMouseXPos, -gr, %iBtnSectorPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnSectorPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function checkButtonClicked_sector void(btnx int, btny int, btnw int, btnh int, callback string)
+{
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnSectorPosX;
+	set chkbtnheight <= %iBtnSectorPosY;
+
+	+= chkbtnwidth %iBtnSectorWidth;
+	+= chkbtnheight %iBtnSectorHeight;
+
+	if (%iMouseXPos, -gr, %iBtnSectorPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnSectorPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					dx.snd.play %hSndSector %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
+
+function drawButton_sector void()
+{
+	local iTxtColorRed int;
+	local iTxtColorGreen int;
+	local iTxtColorBlue int;
+	local bButtonHovered bool;
+	
+	set iTxtColorRed <= 250;
+	set iTxtColorGreen <= 250;
+	set iTxtColorBlue <= 250;
+	
+	dx.gfx.drawsprite %hSprSector %iBtnSectorPosX %iBtnSectorPosY 0 0.0 0.0 false 0 0 0 0;
+	
+	call checkButtonHovered_sector(%iBtnSectorPosX, %iBtnSectorPosY, %iBtnSectorWidth, %iBtnSectorHeight) => bButtonHovered;
+	if (%bButtonHovered, -eq, true) {
+		set iTxtColorRed <= 255;
+		set iTxtColorGreen <= 255;
+		set iTxtColorBlue <= 255;
+	};
+	
+	dx.gfx.drawstring %hDefFont "%szLabelSector" %iTxtSectorX %iTxtSectorY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
+};
+
+function loadAssets_sector void()
+{
+    dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnSectorWidth %iBtnSectorHeight 1 false hSprSector;
+    dx.snd.query "%szSoundPath/sector.wav" hSndSector;
+};

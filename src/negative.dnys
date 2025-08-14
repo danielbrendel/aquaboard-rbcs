@@ -1,0 +1,87 @@
+# AquaShell Counter-Strike Retroboard 'Negative' sound manager script file
+
+const iBtnNegativePosX int <= 265;
+const iBtnNegativePosY int <= 200;
+const iBtnNegativeWidth int <= 190;
+const iBtnNegativeHeight int <= 45;
+const iTxtNegativeX int <= 299;
+const iTxtNegativeY int <= 209;
+const szLabelNegative string <= "NEGATIVE";
+
+global hSprNegative int;
+global hSndNegative int;
+
+function checkButtonHovered_negative bool(btnx int, btny int, btnw int, btnh int)
+{
+	result false;
+	
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnNegativePosX;
+	set chkbtnheight <= %iBtnNegativePosY;
+
+	+= chkbtnwidth %iBtnNegativeWidth;
+	+= chkbtnheight %iBtnNegativeHeight;
+
+	if (%iMouseXPos, -gr, %iBtnNegativePosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnNegativePosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function checkButtonClicked_negative void(btnx int, btny int, btnw int, btnh int, callback string)
+{
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnNegativePosX;
+	set chkbtnheight <= %iBtnNegativePosY;
+
+	+= chkbtnwidth %iBtnNegativeWidth;
+	+= chkbtnheight %iBtnNegativeHeight;
+
+	if (%iMouseXPos, -gr, %iBtnNegativePosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnNegativePosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					dx.snd.play %hSndNegative %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
+
+function drawButton_negative void()
+{
+	local iTxtColorRed int;
+	local iTxtColorGreen int;
+	local iTxtColorBlue int;
+	local bButtonHovered bool;
+	
+	set iTxtColorRed <= 250;
+	set iTxtColorGreen <= 250;
+	set iTxtColorBlue <= 250;
+	
+	dx.gfx.drawsprite %hSprNegative %iBtnNegativePosX %iBtnNegativePosY 0 0.0 0.0 false 0 0 0 0;
+	
+	call checkButtonHovered_negative(%iBtnNegativePosX, %iBtnNegativePosY, %iBtnNegativeWidth, %iBtnNegativeHeight) => bButtonHovered;
+	if (%bButtonHovered, -eq, true) {
+		set iTxtColorRed <= 255;
+		set iTxtColorGreen <= 255;
+		set iTxtColorBlue <= 255;
+	};
+	
+	dx.gfx.drawstring %hDefFont "%szLabelNegative" %iTxtNegativeX %iTxtNegativeY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
+};
+
+function loadAssets_negative void()
+{
+    dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnNegativeWidth %iBtnNegativeHeight 1 false hSprNegative;
+    dx.snd.query "%szSoundPath/negative.wav" hSndNegative;
+};

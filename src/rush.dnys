@@ -1,0 +1,87 @@
+# AquaShell Counter-Strike Retroboard 'Rush' sound manager script file
+
+const iBtnRushPosX int <= 265;
+const iBtnRushPosY int <= 265;
+const iBtnRushWidth int <= 190;
+const iBtnRushHeight int <= 45;
+const iTxtRushX int <= 325;
+const iTxtRushY int <= 275;
+const szLabelRush string <= "RUSH";
+
+global hSprRush int;
+global hSndRush int;
+
+function checkButtonHovered_rush bool(btnx int, btny int, btnw int, btnh int)
+{
+	result false;
+	
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnRushPosX;
+	set chkbtnheight <= %iBtnRushPosY;
+
+	+= chkbtnwidth %iBtnRushWidth;
+	+= chkbtnheight %iBtnRushHeight;
+
+	if (%iMouseXPos, -gr, %iBtnRushPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnRushPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function checkButtonClicked_rush void(btnx int, btny int, btnw int, btnh int, callback string)
+{
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnRushPosX;
+	set chkbtnheight <= %iBtnRushPosY;
+
+	+= chkbtnwidth %iBtnRushWidth;
+	+= chkbtnheight %iBtnRushHeight;
+
+	if (%iMouseXPos, -gr, %iBtnRushPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnRushPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					dx.snd.play %hSndRush %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
+
+function drawButton_rush void()
+{
+	local iTxtColorRed int;
+	local iTxtColorGreen int;
+	local iTxtColorBlue int;
+	local bButtonHovered bool;
+	
+	set iTxtColorRed <= 250;
+	set iTxtColorGreen <= 250;
+	set iTxtColorBlue <= 250;
+	
+	dx.gfx.drawsprite %hSprRush %iBtnRushPosX %iBtnRushPosY 0 0.0 0.0 false 0 0 0 0;
+	
+	call checkButtonHovered_rush(%iBtnRushPosX, %iBtnRushPosY, %iBtnRushWidth, %iBtnRushHeight) => bButtonHovered;
+	if (%bButtonHovered, -eq, true) {
+		set iTxtColorRed <= 255;
+		set iTxtColorGreen <= 255;
+		set iTxtColorBlue <= 255;
+	};
+	
+	dx.gfx.drawstring %hDefFont "%szLabelRush" %iTxtRushX %iTxtRushY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
+};
+
+function loadAssets_rush void()
+{
+    dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnRushWidth %iBtnRushHeight 1 false hSprRush;
+    dx.snd.query "%szSoundPath/rush.wav" hSndRush;
+};
