@@ -5,8 +5,11 @@ const CONFIGS_WINDOW_POSY int <= 135;
 const CONFIGS_WINDOW_WIDTH int <= 415;
 const CONFIGS_WINDOW_HEIGHT int <= 495;
 const CONFIGS_WINDOW_BORDER_SIZE int <= 6;
+const CONFIGS_TIMER_DELAY int <= 20000;
 
+global iConfigIndex int;
 global hConfigFont int;
+global bConfigOnce bool;
 
 array arrConfigItems string 5 (
     "bhop",
@@ -16,21 +19,60 @@ array arrConfigItems string 5 (
     "polyoffset"
 );
 
+array arrConfigContents string 0 ();
+
+function SwitchConfigShowcase_OnElapsed bool()
+{
+	call updateConfigItem() => void;
+
+	result true;
+};
+
 function loadConfigItem void(configBasePath string)
 {
-    local iRndConfigItem int;
     local configContent string;
 
-    random 0 %arrConfigItems.length iRndConfigItem;
+    set bConfigOnce <= false;
 
-    sys {type "%configBasePath\%arrConfigItems[%iRndConfigItem].txt"} configContent;
-    s_tokenize "%configContent" "%CR%LF" arrSplittedConfigLines;
+    for (cfgcnt, 0, %arrConfigItems.length, -inc) {
+        sys {type "%configBasePath\%arrConfigItems[%cfgcnt].txt"} configContent;
+        array_item_append arrConfigContents "%configContent";
+    };
+    
+    dx.gfx.loadfont "Verdana" 8 20 hConfigFont;
+
+    random 0 %arrConfigItems.length iConfigIndex;
+    call updateConfigItem() => void;
+
+    aut_addtimer SwitchConfigShowcase %CONFIGS_TIMER_DELAY;
+};
+
+function updateConfigItem void()
+{
+    local fixedquantity int;
+    local currentConfig string;
+
+    set fixedquantity <= %arrConfigItems.length;
+    -- fixedquantity;
+
+    ++ iConfigIndex;
+    if (%iConfigIndex, -gre, %fixedquantity) {
+        set iConfigIndex <= 0;
+    };
+
+    array_item_get arrConfigContents %iConfigIndex currentConfig;
+
+    if (%bConfigOnce, -eq, true) {
+        s_cleartokens arrSplittedConfigLines;
+    } else {
+        set bConfigOnce <= true;
+    };
+
+    s_tokenize "%currentConfig" "%CR%LF" arrSplittedConfigLines;
 
     for (j, 0, %arrSplittedConfigLines.count, -inc) {
         s_replace arrSplittedConfigLines[%j] {\n} " ";
     };
-    
-    dx.gfx.loadfont "Verdana" 8 20 hConfigFont;
 };
 
 function drawConfigLines void()
