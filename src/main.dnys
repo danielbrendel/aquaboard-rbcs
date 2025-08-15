@@ -13,7 +13,7 @@ const WND_RES_X int <= 1024;
 const WND_RES_Y int <= 768;
 const INVALID_DX_HANDLE int <= -1;
 const GLOBAL_VOLUME int <= 10;
-const MAX_BACKGROUND_IMAGES int <= 6;
+const MAX_BACKGROUND_IMAGES int <= 10;
 const MAX_WELCOME_SOUNDS int <= 5;
 const INFO_WEBSITE string <= "www.aquashell-scripting.com";
 
@@ -116,7 +116,8 @@ function DXWND_OnCreate void(hWnd int)
     dx.gfx.loadfont "Verdana" 12 25 hDefFont;
 	dx.gfx.loadfont "Verdana" 8 20 hInfoFont;
 	
-	random 1 %MAX_BACKGROUND_IMAGES iRndNumber;
+	random 0 %MAX_BACKGROUND_IMAGES iRndNumber;
+	++ iRndNumber;
 	dx.gfx.setbgimage "%szSpritePath/background%iRndNumber.png";
 
 	dx.gfx.loadsprite "%szSpritePath/banner.png" 1 %WND_RES_X 96 1 false hBanner;
