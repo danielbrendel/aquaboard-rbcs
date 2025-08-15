@@ -2,10 +2,12 @@
 
 const MAPS_WINDOW_POSX int <= 50;
 const MAPS_WINDOW_POSY int <= 435;
+const MAPS_TIMER_DELAY int <= 10000;
 
-global hCurrentMap int;
+global iCurrentIndex int;
 global szCurrentMap string;
 global hTxtBar int;
+global hCurMapSpr int;
 global hMapsFont int;
 
 array arrMapsItems string 10 (
@@ -21,18 +23,47 @@ array arrMapsItems string 10 (
     "scoutzknivez"
 );
 
+array arrMapSprites int 0 ();
+
+function SwitchMapShowcase_OnElapsed bool()
+{
+	call updateMapShowcase() => void;
+
+	result true;
+};
+
 function loadMapShowcase void(spriteBasePath string)
 {
-    local rndNumber int;
+    local tempHandle int;
 
-    random 0 %arrMapsItems.length rndNumber;
-
-    array_item_get arrMapsItems %rndNumber szCurrentMap;
-    dx.gfx.loadsprite "%spriteBasePath\maps\%arrMapsItems[%rndNumber].png" 1 350 197 1 false hCurrentMap;
+    for (mpcnt, 0, %arrMapsItems.length, -inc) {
+        dx.gfx.loadsprite "%spriteBasePath\maps\%arrMapsItems[%mpcnt].png" 1 350 197 1 false tempHandle;
+        array_item_append arrMapSprites "%tempHandle";
+    };
 
     dx.gfx.loadsprite "%spriteBasePath\bar.png" 1 350 32 1 false hTxtBar;
-    
     dx.gfx.loadfont "Verdana" 8 20 hMapsFont;
+
+    random 0 %arrMapsItems.length iCurrentIndex;
+    call updateMapShowcase() => void;
+
+    aut_addtimer SwitchMapShowcase %MAPS_TIMER_DELAY;
+};
+
+function updateMapShowcase void()
+{
+    local fixedquantity int;
+
+    set fixedquantity <= %arrMapsItems.length;
+    -- fixedquantity;
+
+    ++ iCurrentIndex;
+    if (%iCurrentIndex, -gre, %fixedquantity) {
+        set iCurrentIndex <= 0;
+    };
+
+    array_item_get arrMapsItems %iCurrentIndex szCurrentMap;
+    array_item_get arrMapSprites %iCurrentIndex hCurMapSpr;
 };
 
 function drawMapShowcase void()
@@ -45,8 +76,8 @@ function drawMapShowcase void()
 
     += txtposx 5;
     += txtposy 5;
-
-    dx.gfx.drawsprite %hCurrentMap %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY 0 0.0 0.0 false 0 0 0 0;
+    
+    dx.gfx.drawsprite %hCurMapSpr %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY 0 0.0 0.0 false 0 0 0 0;
     dx.gfx.drawsprite %hTxtBar %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY 0 0.0 0.0 false 0 0 0 0;
     dx.gfx.drawstring %hMapsFont "%szCurrentMap" %txtposx %txtposy 255 255 255 255;
 };
