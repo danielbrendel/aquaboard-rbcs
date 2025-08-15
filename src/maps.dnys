@@ -7,12 +7,17 @@ global hCurrentMap int;
 global szCurrentMap string;
 global hMapsFont int;
 
-array arrMapsItems string 5 (
+array arrMapsItems string 10 (
+    "aim_ak_colt",
+    "aim_map",
     "awp_map",
     "de_rats",
     "fun_allinone",
 	"fy_iceworld",
-    "fy_pool_day"
+    "fy_pool_day",
+    "he_glasswar",
+    "ka_legoland",
+    "scoutzknivez"
 );
 
 function loadMapShowcase void(mapsBasePath string)
