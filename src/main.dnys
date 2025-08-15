@@ -126,7 +126,7 @@ function DXWND_OnCreate void(hWnd int)
 	};
 
 	call loadConfigItem("%szConfigsPath") => void;
-	call loadMapShowcase("%szSpritePath\maps") => void;
+	call loadMapShowcase("%szSpritePath") => void;
 
 	random 1 %MAX_WELCOME_SOUNDS iRndNumber;
 	dx.snd.query "%szSoundPath/welcome%iRndNumber.wav" hSndWelcome;

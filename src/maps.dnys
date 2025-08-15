@@ -5,6 +5,7 @@ const MAPS_WINDOW_POSY int <= 435;
 
 global hCurrentMap int;
 global szCurrentMap string;
+global hTxtBar int;
 global hMapsFont int;
 
 array arrMapsItems string 10 (
@@ -20,14 +21,16 @@ array arrMapsItems string 10 (
     "scoutzknivez"
 );
 
-function loadMapShowcase void(mapsBasePath string)
+function loadMapShowcase void(spriteBasePath string)
 {
     local rndNumber int;
 
-    random 1 %arrMapsItems.length rndNumber;
+    random 0 %arrMapsItems.length rndNumber;
 
     array_item_get arrMapsItems %rndNumber szCurrentMap;
-    dx.gfx.loadsprite "%mapsBasePath\%arrMapsItems[%rndNumber].png" 1 350 197 1 false hCurrentMap;
+    dx.gfx.loadsprite "%spriteBasePath\maps\%arrMapsItems[%rndNumber].png" 1 350 197 1 false hCurrentMap;
+
+    dx.gfx.loadsprite "%spriteBasePath\bar.png" 1 350 32 1 false hTxtBar;
     
     dx.gfx.loadfont "Verdana" 8 20 hMapsFont;
 };
@@ -36,7 +39,6 @@ function drawMapShowcase void()
 {
     local txtposx int;
     local txtposy int;
-    local txtwidth int;
 
     set txtposx <= %MAPS_WINDOW_POSX;
     set txtposy <= %MAPS_WINDOW_POSY;
@@ -44,10 +46,7 @@ function drawMapShowcase void()
     += txtposx 5;
     += txtposy 5;
 
-    s_getlen "%szCurrentMap" txtwidth;
-    *= txtwidth 10;
-
     dx.gfx.drawsprite %hCurrentMap %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY 0 0.0 0.0 false 0 0 0 0;
-    dx.gfx.drawfilledbox %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY %txtwidth 32 0 0 0 255;
+    dx.gfx.drawsprite %hTxtBar %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY 0 0.0 0.0 false 0 0 0 0;
     dx.gfx.drawstring %hMapsFont "%szCurrentMap" %txtposx %txtposy 255 255 255 255;
 };
