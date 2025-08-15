@@ -13,7 +13,7 @@ const WND_RES_X int <= 1024;
 const WND_RES_Y int <= 768;
 const INVALID_DX_HANDLE int <= -1;
 const GLOBAL_VOLUME int <= 10;
-const MAX_WELCOME_SOUNDS int <= 3;
+const MAX_WELCOME_SOUNDS int <= 5;
 const INFO_WEBSITE string <= "www.aquashell-scripting.com";
 
 global szScriptPath string;
@@ -144,7 +144,7 @@ function DXWND_OnDraw void()
 	if (%bRunDrawOnce, -eq, false) {
 		set bRunDrawOnce <= true;
 
-		aut_addtimer PlayWelcomeSound 1000;
+		aut_addtimer PlayWelcomeSound 250;
 	};
 
 	dx.gfx.drawsprite %hBanner 0 0 0 0.0 0.0 false 0 0 0 0;
