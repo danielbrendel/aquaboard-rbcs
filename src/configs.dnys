@@ -1,14 +1,18 @@
 # AquaShell Counter-Strike Retroboard config sources manager script file
 
-const CONFIGS_WINDOW_POSX int <= 600;
+const CONFIGS_WINDOW_POSX int <= 550;
 const CONFIGS_WINDOW_POSY int <= 135;
-const CONFIGS_WINDOW_WIDTH int <= 400;
-const CONFIGS_WINDOW_HEIGHT int <= 500;
+const CONFIGS_WINDOW_WIDTH int <= 415;
+const CONFIGS_WINDOW_HEIGHT int <= 495;
 const CONFIGS_WINDOW_BORDER_SIZE int <= 6;
 
 global hConfigFont int;
 
-array arrConfigItems string 1 (
+array arrConfigItems string 5 (
+    "bhop",
+    "bindings",
+    "netsettings",
+    "optimizing",
     "polyoffset"
 );
 
@@ -17,8 +21,7 @@ function loadConfigItem void(configBasePath string)
     local iRndConfigItem int;
     local configContent string;
 
-    random 1 arrConfigItems.length iRndConfigItem;
-    -- iRndConfigItem;
+    random 0 %arrConfigItems.length iRndConfigItem;
 
     sys {type "%configBasePath\%arrConfigItems[%iRndConfigItem].txt"} configContent;
     s_tokenize "%configContent" "%CR%LF" arrSplittedConfigLines;

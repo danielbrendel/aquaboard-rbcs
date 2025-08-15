@@ -1,0 +1,14 @@
+// Netsettings were an important part of 
+// the game. There were countless of 
+// generators and articles on how to 
+// improve your network performance.
+\n
+rate 25000
+cl_updaterate 101
+cl_cmdrate 101
+cl_dlmax 1024
+\n
+// In the same context, the infamous 
+// ex_interp cvar was heavily debated
+\n
+ex_interp 0.1

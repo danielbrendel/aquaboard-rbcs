@@ -6,7 +6,7 @@
 // through walls. This could be abused
 // to enhance ones wallbang opportunities.
 \n
-gl_polyoffset 10000;
+gl_polyoffset 10000
 \n
 // It was later fixed, so players couldn't
 // set arbitrary values anymore.

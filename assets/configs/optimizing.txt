@@ -1,0 +1,16 @@
+// Optimizing the game was very popular.
+// There were countless of cvars and
+// commands that were modified to fit
+// ones needs. 
+\n
+// Also the spreading of pro-gamer
+// configs was so popular that
+// sole config websites emerged.
+\n
+hud_fastswitch 1
+cl_bob 0
+cl_dynamiccrosshair 0
+cl_crosshair_size small
+\n
+// At some point, optimizing configs
+// became somwhat mythological.

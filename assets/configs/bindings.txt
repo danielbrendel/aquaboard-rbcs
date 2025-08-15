@@ -1,0 +1,14 @@
+// Key bindings were widely used.
+// There were many possibilites for
+// custom binds, such as buy scripts,
+// say scripts or quick toggles.
+\n
+// The infamous stopsound binding
+bind "b" "buy; stopsound"
+\n
+// A typical buy script
+bind "F2" "m4a1; primammo"
+\n
+// Say scripts with random chats
+bind "F3" "say -=%GL%&%HF%=-"
+bind "F4" "say_team -=%Rush%B%=-"
