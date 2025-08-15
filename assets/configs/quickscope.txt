@@ -1,0 +1,14 @@
+// Quickscope scripts were used to
+// quickly enter zoom mode of a
+// sniper rifle and then shoot.
+\n
+// This ensured that the bullet
+// would hit where you aimed to.
+\n
+alias qs1 "+attack2; wait; +attack"
+alias qs2 "-attack; wait; -attack2"
+alias qsm "qs1; wait; qs2"
+\n
+// Quickscope scripts were mostly
+// forbidden and could let to being
+// kicked or banned from a server

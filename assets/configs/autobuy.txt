@@ -1,0 +1,14 @@
+// The order of what items
+// to purchase upon using
+// the "autobuy" command
+// could be defined via the
+// "autobuy.txt" file.
+\n
+m4a1
+ak47
+\n
+primammo
+secammo
+\n
+defuser
+vest

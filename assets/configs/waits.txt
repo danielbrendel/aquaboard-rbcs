@@ -1,0 +1,14 @@
+// Wait aliases were very popular
+// as they faced plenty of use cases
+// for various scripts.
+\n
+alias wait1 "wait"
+alias wait2 "wait; wait"
+alias wait3 "wait; wait; wait"
+alias wait4 "wait; wait; wait; wait"
+alias wait5 "wait; wait; wait; wait; wait"
+alias wait6 "wait5; wait"
+alias wait7 "wait6; wait"
+alias wait8 "wait7; wait"
+alias wait9 "wait8; wait"
+alias wait10 "wait9; wait"

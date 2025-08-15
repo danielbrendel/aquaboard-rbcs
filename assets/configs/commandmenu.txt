@@ -1,0 +1,14 @@
+// A nice way to access scripts
+// via GUI was using the popular
+// command menu layout file.
+\n
+"1" "Info" "say This%is%a%test"
+"2" "Submenu"
+{
+	"1" "Timeleft" "timeleft"
+	"2" "Speak" "messagemode speak"
+}
+"3" "Quit" 	"quit"
+\n
+// The layout definition was put in
+// the "commandmenu.txt" file.

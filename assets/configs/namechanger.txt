@@ -1,0 +1,14 @@
+// Name changer scripts were quite 
+// popular, while often being very
+// annoying, as they were often
+// used for name spamming.
+\n
+alias nc1 "name Name%1; alias nxnm nc2"
+alias nc2 "name Name%2; alias nxnm nc3"
+alias nc3 "name Name%3; alias nxnm nc4"
+alias nc4 "name Name%4; alias nxnm nc5"
+alias nc5 "name Name%5; alias nxnm nc1"
+alias nxnm nc1
+\n
+// Using those scripts often led to
+// a kick or ban from the server.
