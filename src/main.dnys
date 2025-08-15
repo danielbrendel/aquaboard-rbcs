@@ -29,10 +29,13 @@ global hSndWelcome int;
 global iMouseXPos int;
 global iMouseYPos int;
 global bLinkHover bool;
+global bLastHover bool;
 global iLinkXPos int;
 global iLinkYPos int;
 global iLinkWidth int;
 global iLinkHeight int;
+global hSndLinkHover int;
+global hSndLinkClick int;
 global bRunDrawOnce bool;
 
 array arrSoundScriptItems string 8 (
@@ -64,6 +67,7 @@ set iLinkYPos <= 723;
 set iLinkWidth <= 235;
 set iLinkHeight <= -15;
 
+set bLastHover <= false;
 set bRunDrawOnce <= false;
 
 function PlayWelcomeSound_OnElapsed bool()
@@ -132,6 +136,9 @@ function DXWND_OnCreate void(hWnd int)
 	random 1 %MAX_WELCOME_SOUNDS iRndNumber;
 	dx.snd.query "%szSoundPath/welcome%iRndNumber.wav" hSndWelcome;
 
+	dx.snd.query "%szSoundPath/linkhover.wav" hSndLinkHover;
+	dx.snd.query "%szSoundPath/linkclick.wav" hSndLinkClick;
+
     debug "DX.Graphics and DX.Sound initialized";
 };
 
@@ -165,10 +172,20 @@ function DXWND_OnDraw void()
 		set iLinkColorRed <= 255;
 		set iLinkColorGreen <= 185;
 		set iLinkColorBlue <= 90;
+
+		if (%bLastHover, -eq, false) {
+			dx.snd.play %hSndLinkHover %GLOBAL_VOLUME;
+
+			set bLastHover <= true;
+		};
 	} else {
 		set iLinkColorRed <= 255;
 		set iLinkColorGreen <= 165;
 		set iLinkColorBlue <= 70;
+
+		if (%bLastHover, -eq, true) {
+			set bLastHover <= false;
+		};
 	};
 
 	dx.gfx.drawstring %hInfoFont "This project is fan-made and is not affiliated with Valve or Steam" 250 693 255 255 255 255;
@@ -205,6 +222,7 @@ function DXWND_OnMouseInput void(x int, y int, iMouseKey int, bDown bool, bCtrlH
 
 			call checkLinkRange() => bInLinkRange;
 			if (%bInLinkRange, -eq, true) {
+				dx.snd.play %hSndLinkClick %GLOBAL_VOLUME;
 				sys "start https://%INFO_WEBSITE";
 			};
 		};
