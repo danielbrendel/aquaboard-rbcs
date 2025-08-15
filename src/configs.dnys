@@ -34,6 +34,13 @@ function drawConfigLines void()
 {
     local curposx int;
     local curposy int;
+    local strcurline string;
+    local curlinelen int;
+    local cmtpos int;
+    local curcolorr int;
+    local curcolorg int;
+    local curcolorb int;
+    local curcolora int;
 
     set curposx <= %CONFIGS_WINDOW_POSX;
     set curposy <= %CONFIGS_WINDOW_POSY;
@@ -45,7 +52,32 @@ function drawConfigLines void()
     dx.gfx.drawbox %CONFIGS_WINDOW_POSX %CONFIGS_WINDOW_POSY %CONFIGS_WINDOW_WIDTH %CONFIGS_WINDOW_HEIGHT %CONFIGS_WINDOW_BORDER_SIZE 79 89 69 150;
 
     for (i, 0, %arrSplittedConfigLines.count, -inc) {
-        dx.gfx.drawstring %hConfigFont "%arrSplittedConfigLines[%i]" %curposx %curposy 200 200 200 255;
+        set strcurline <= "%arrSplittedConfigLines[%i]";
+
+        set curcolorr <= 255;
+        set curcolorg <= 255;
+        set curcolorb <= 255;
+        set curcolora <= 255;
+
+        s_getlen "%strcurline" curlinelen;
+        if (%curlinelen, -gr, 1) {
+            s_ltrim strcurline;
+
+            s_find "%strcurline" "//" cmtpos;
+            if (%cmtpos, -gre, 0) {
+                set curcolorr <= 150;
+                set curcolorg <= 190;
+                set curcolorb <= 150;
+                set curcolora <= 255;
+            } else {
+                set curcolorr <= 255;
+                set curcolorg <= 255;
+                set curcolorb <= 255;
+                set curcolora <= 255;
+            };
+        };
+
+        dx.gfx.drawstring %hConfigFont "%strcurline" %curposx %curposy %curcolorr %curcolorg %curcolorb %curcolora;
 
         += curposx 0;
         += curposy 30;
