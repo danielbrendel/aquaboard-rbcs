@@ -7,7 +7,7 @@ require "dx.graphics";
 require "dx.sound";
 require "strings";
 
-#hideconsole;
+hideconsole;
 
 const WND_RES_X int <= 1024;
 const WND_RES_Y int <= 768;

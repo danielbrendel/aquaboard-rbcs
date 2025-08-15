@@ -13,4 +13,4 @@ cl_dynamiccrosshair 0
 cl_crosshair_size small
 \n
 // At some point, optimizing configs
-// became somwhat mythological.
+// became somewhat mythological.

@@ -1,5 +1,5 @@
 // Bunnyhopping was the thing back then.
-// It was nerfed with each new build
+// It was nerfed after certain updates
 // of the game, so eventually these
 // scripts lost their purpose.
 \n
@@ -10,5 +10,5 @@ alias special "special"
 bind SPACE +bhop
 \n
 // It's worth noting that bunnyhop scripts
-// were frowned upon most of the times,
+// were met with criticism most of the times,
 // as actual bhop skills were favored.
