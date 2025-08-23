@@ -64,17 +64,17 @@ function drawButton_chicken void()
 	local iTxtColorBlue int;
 	local bButtonHovered bool;
 	
-	set iTxtColorRed <= 250;
-	set iTxtColorGreen <= 250;
-	set iTxtColorBlue <= 250;
+	set iTxtColorRed <= 255;
+	set iTxtColorGreen <= 255;
+	set iTxtColorBlue <= 255;
 	
 	dx.gfx.drawsprite %hSprChicken %iBtnChickenPosX %iBtnChickenPosY 0 0.0 0.0 false 0 0 0 0;
 	
 	call checkButtonHovered_chicken(%iBtnChickenPosX, %iBtnChickenPosY, %iBtnChickenWidth, %iBtnChickenHeight) => bButtonHovered;
 	if (%bButtonHovered, -eq, true) {
 		set iTxtColorRed <= 255;
-		set iTxtColorGreen <= 255;
-		set iTxtColorBlue <= 255;
+		set iTxtColorGreen <= 235;
+		set iTxtColorBlue <= 215;
 	};
 	
 	dx.gfx.drawstring %hDefFont "%szLabelChicken" %iTxtChickenX %iTxtChickenY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;

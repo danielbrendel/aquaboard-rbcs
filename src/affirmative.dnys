@@ -72,17 +72,17 @@ function drawButton_affirmative void()
 	local iTxtColorBlue int;
 	local bButtonHovered bool;
 	
-	set iTxtColorRed <= 250;
-	set iTxtColorGreen <= 250;
-	set iTxtColorBlue <= 250;
+	set iTxtColorRed <= 255;
+	set iTxtColorGreen <= 255;
+	set iTxtColorBlue <= 255;
 	
 	dx.gfx.drawsprite %hSprAffirmative %iBtnAffirmativePosX %iBtnAffirmativePosY 0 0.0 0.0 false 0 0 0 0;
 	
 	call checkButtonHovered_affirmative(%iBtnAffirmativePosX, %iBtnAffirmativePosY, %iBtnAffirmativeWidth, %iBtnAffirmativeHeight) => bButtonHovered;
 	if (%bButtonHovered, -eq, true) {
 		set iTxtColorRed <= 255;
-		set iTxtColorGreen <= 255;
-		set iTxtColorBlue <= 255;
+		set iTxtColorGreen <= 235;
+		set iTxtColorBlue <= 215;
 	};
 	
 	dx.gfx.drawstring %hDefFont "%szLabelAffirmative" %iTxtAffirmativeX %iTxtAffirmativeY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;

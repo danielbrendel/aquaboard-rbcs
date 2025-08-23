@@ -64,17 +64,17 @@ function drawButton_follow void()
 	local iTxtColorBlue int;
 	local bButtonHovered bool;
 	
-	set iTxtColorRed <= 250;
-	set iTxtColorGreen <= 250;
-	set iTxtColorBlue <= 250;
+	set iTxtColorRed <= 255;
+	set iTxtColorGreen <= 255;
+	set iTxtColorBlue <= 255;
 	
 	dx.gfx.drawsprite %hSprFollow %iBtnFollowPosX %iBtnFollowPosY 0 0.0 0.0 false 0 0 0 0;
 	
 	call checkButtonHovered_follow(%iBtnFollowPosX, %iBtnFollowPosY, %iBtnFollowWidth, %iBtnFollowHeight) => bButtonHovered;
 	if (%bButtonHovered, -eq, true) {
 		set iTxtColorRed <= 255;
-		set iTxtColorGreen <= 255;
-		set iTxtColorBlue <= 255;
+		set iTxtColorGreen <= 235;
+		set iTxtColorBlue <= 215;
 	};
 	
 	dx.gfx.drawstring %hDefFont "%szLabelFollow" %iTxtFollowX %iTxtFollowY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;

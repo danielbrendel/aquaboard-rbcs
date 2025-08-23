@@ -68,17 +68,17 @@ function drawButton_hostage void()
 	local iTxtColorBlue int;
 	local bButtonHovered bool;
 	
-	set iTxtColorRed <= 250;
-	set iTxtColorGreen <= 250;
-	set iTxtColorBlue <= 250;
+	set iTxtColorRed <= 255;
+	set iTxtColorGreen <= 255;
+	set iTxtColorBlue <= 255;
 	
 	dx.gfx.drawsprite %hSprHostage %iBtnHostagePosX %iBtnHostagePosY 0 0.0 0.0 false 0 0 0 0;
 	
 	call checkButtonHovered_hostage(%iBtnHostagePosX, %iBtnHostagePosY, %iBtnHostageWidth, %iBtnHostageHeight) => bButtonHovered;
 	if (%bButtonHovered, -eq, true) {
 		set iTxtColorRed <= 255;
-		set iTxtColorGreen <= 255;
-		set iTxtColorBlue <= 255;
+		set iTxtColorGreen <= 235;
+		set iTxtColorBlue <= 215;
 	};
 	
 	dx.gfx.drawstring %hDefFont "%szLabelHostage" %iTxtHostageX %iTxtHostageY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
