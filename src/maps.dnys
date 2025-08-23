@@ -1,6 +1,6 @@
 # AquaShell Counter-Strike Retroboard maps showcase manager script file
 
-const MAPS_WINDOW_POSX int <= 50;
+const MAPS_WINDOW_POSX int <= 30;
 const MAPS_WINDOW_POSY int <= 520;
 const MAPS_TIMER_DELAY int <= 10000;
 
@@ -42,7 +42,7 @@ function loadMapShowcase void(spriteBasePath string)
     };
 
     dx.gfx.loadsprite "%spriteBasePath\bar.png" 1 350 32 1 false hTxtBar;
-    dx.gfx.loadfont "Verdana" 8 20 hMapsFont;
+    dx.gfx.loadfont "Verdana" 8 17 hMapsFont;
 
     random 0 %arrMapsItems.length iCurrentIndex;
     call updateMapShowcase() => void;
@@ -68,16 +68,19 @@ function updateMapShowcase void()
 
 function drawMapShowcase void()
 {
+    local barposy int;
     local txtposx int;
     local txtposy int;
 
+    set barposy <= %MAPS_WINDOW_POSY;
     set txtposx <= %MAPS_WINDOW_POSX;
     set txtposy <= %MAPS_WINDOW_POSY;
 
-    += txtposx 5;
-    += txtposy 5;
+    += barposy 8;
+    += txtposx 23;
+    += txtposy 16;
     
-    dx.gfx.drawsprite %hCurMapSpr %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY 0 0.0 0.0 false 0 0 0 0;
-    dx.gfx.drawsprite %hTxtBar %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY 0 0.0 0.0 false 0 0 0 0;
+    dx.gfx.drawsprite %hCurMapSpr %MAPS_WINDOW_POSX %MAPS_WINDOW_POSY 0 0.0 0.9 false 0 0 0 0;
+    dx.gfx.drawsprite %hTxtBar %MAPS_WINDOW_POSX %barposy 0 0.0 0.9 false 0 0 0 0;
     dx.gfx.drawstring %hMapsFont "%szCurrentMap" %txtposx %txtposy 255 255 255 255;
 };
