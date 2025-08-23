@@ -10,6 +10,7 @@ const szLabelAffirmative string <= "AFFIRMATIVE";
 
 global hSprAffirmative int;
 global hSndAffirmative int;
+global hSndRogerThat int;
 
 function checkButtonHovered_affirmative bool(btnx int, btny int, btnw int, btnh int)
 {
@@ -39,6 +40,7 @@ function checkButtonClicked_affirmative void(btnx int, btny int, btnw int, btnh 
 {
 	local chkbtnwidth int;
 	local chkbtnheight int;
+	local iRndAffirmRoger int;
 	
 	set chkbtnwidth <= %iBtnAffirmativePosX;
 	set chkbtnheight <= %iBtnAffirmativePosY;
@@ -50,7 +52,13 @@ function checkButtonClicked_affirmative void(btnx int, btny int, btnw int, btnh 
 		if (%iMouseXPos, -ls, %chkbtnwidth) {
 			if (%iMouseYPos, -gr, %iBtnAffirmativePosY) {
 				if (%iMouseYPos, -ls, %chkbtnheight) {
-					dx.snd.play %hSndAffirmative %GLOBAL_VOLUME;
+					random 0 2 iRndAffirmRoger;
+					
+					if (%iRndAffirmRoger, -eq, 0) {
+						dx.snd.play %hSndAffirmative %GLOBAL_VOLUME;
+					} else {
+						dx.snd.play %hSndRogerThat %GLOBAL_VOLUME;
+					};
 				};
 			};
 		};
@@ -84,4 +92,5 @@ function loadAssets_affirmative void()
 {
     dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnAffirmativeWidth %iBtnAffirmativeHeight 1 false hSprAffirmative;
     dx.snd.query "%szSoundPath/affirmative.wav" hSndAffirmative;
+	dx.snd.query "%szSoundPath/roger.wav" hSndRogerThat;
 };
