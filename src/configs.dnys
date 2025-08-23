@@ -161,3 +161,29 @@ function drawConfigLines void()
         += curposy 30;
     };
 };
+
+function checkConfigClicked void()
+{
+    local chkcfgframewidth int;
+	local chkcfgframeheight int;
+	
+	set chkcfgframewidth <= %CONFIGS_WINDOW_POSX;
+	set chkcfgframeheight <= %CONFIGS_WINDOW_POSY;
+
+	+= chkcfgframewidth %CONFIGS_WINDOW_WIDTH;
+	+= chkcfgframeheight %CONFIGS_WINDOW_HEIGHT;
+
+    -= chkcfgframewidth 10;
+    -= chkcfgframeheight 30;
+
+	if (%iMouseXPos, -gr, %CONFIGS_WINDOW_POSX) {
+		if (%iMouseXPos, -ls, %chkcfgframewidth) {
+			if (%iMouseYPos, -gr, %CONFIGS_WINDOW_POSY) {
+				if (%iMouseYPos, -ls, %chkcfgframeheight) {
+                    call updateConfigItem() => void;
+					dx.snd.play %hSndLinkClick %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};

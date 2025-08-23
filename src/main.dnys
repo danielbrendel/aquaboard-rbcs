@@ -269,6 +269,7 @@ function DXWND_OnMouseInput void(x int, y int, iMouseKey int, bDown bool, bCtrlH
 			};
 
 			call checkMapClicked() => void;
+			call checkConfigClicked() => void;
 
 			call checkLinkRange() => bInLinkRange;
 			if (%bInLinkRange, -eq, true) {
