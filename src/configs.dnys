@@ -33,6 +33,34 @@ function SwitchConfigShowcase_OnElapsed bool()
 	result true;
 };
 
+function loadCfgFileContent string(cfgbasefile string)
+{
+    local hFileHandle int;
+    local bAtEndOfFile bool;
+    local szCurReadLine string;
+    local szWholeContent string;
+
+    result "";
+
+    set szWholeContent <= "";
+
+    fopen "%cfgbasefile" false hFileHandle;
+    if (%hFileHandle, -nt, %FIO_INVALID_HANDLE) {
+        set bAtEndOfFile <= false;
+        
+        while (%bAtEndOfFile, -eq, false) {
+            fateof %hFileHandle bAtEndOfFile;
+            freadline %hFileHandle szCurReadLine;
+            
+            set szWholeContent <= "%szWholeContent%CR%LF%szCurReadLine";
+        };
+        
+        fclose %hFileHandle;
+    };
+
+    result "%szWholeContent";
+};
+
 function loadConfigItem void(configBasePath string)
 {
     local configContent string;
@@ -40,7 +68,7 @@ function loadConfigItem void(configBasePath string)
     set bConfigOnce <= false;
 
     for (cfgcnt, 0, %arrConfigItems.length, -inc) {
-        sys {type "%configBasePath\%arrConfigItems[%cfgcnt].txt"} configContent;
+        call loadCfgFileContent("%configBasePath\%arrConfigItems[%cfgcnt].txt") => configContent;
         array_item_append arrConfigContents "%configContent";
     };
     
