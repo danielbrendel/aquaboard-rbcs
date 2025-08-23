@@ -268,6 +268,8 @@ function DXWND_OnMouseInput void(x int, y int, iMouseKey int, bDown bool, bCtrlH
 				call checkButtonClicked_%arrSoundScriptItems[%i]() => void;
 			};
 
+			call checkMapClicked() => void;
+
 			call checkLinkRange() => bInLinkRange;
 			if (%bInLinkRange, -eq, true) {
 				dx.snd.play %hSndLinkClick %GLOBAL_VOLUME;

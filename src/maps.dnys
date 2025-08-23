@@ -84,3 +84,26 @@ function drawMapShowcase void()
     dx.gfx.drawsprite %hTxtBar %MAPS_WINDOW_POSX %barposy 0 0.0 0.9 false 0 0 0 0;
     dx.gfx.drawstring %hMapsFont "%szCurrentMap" %txtposx %txtposy 255 255 255 255;
 };
+
+function checkMapClicked void()
+{
+    local chkmapframewidth int;
+	local chkmapframeheight int;
+	
+	set chkmapframewidth <= %MAPS_WINDOW_POSX;
+	set chkmapframeheight <= %MAPS_WINDOW_POSY;
+
+	+= chkmapframewidth 315;
+	+= chkmapframeheight 175;
+
+	if (%iMouseXPos, -gr, %MAPS_WINDOW_POSX) {
+		if (%iMouseXPos, -ls, %chkmapframewidth) {
+			if (%iMouseYPos, -gr, %MAPS_WINDOW_POSY) {
+				if (%iMouseYPos, -ls, %chkmapframeheight) {
+                    call updateMapShowcase() => void;
+					dx.snd.play %hSndLinkClick %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
