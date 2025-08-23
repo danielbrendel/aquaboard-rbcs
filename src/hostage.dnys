@@ -1,11 +1,11 @@
 # AquaShell Counter-Strike Retroboard 'Hostage' sound manager script file
 
 const iBtnHostagePosX int <= 265;
-const iBtnHostagePosY int <= 385;
+const iBtnHostagePosY int <= 255;
 const iBtnHostageWidth int <= 190;
 const iBtnHostageHeight int <= 45;
 const iTxtHostageX int <= 310;
-const iTxtHostageY int <= 395;
+const iTxtHostageY int <= 265;
 const szLabelHostage string <= "HOSTAGE";
 
 global hSprHostage int;

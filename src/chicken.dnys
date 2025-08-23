@@ -1,11 +1,11 @@
 # AquaShell Counter-Strike Retroboard 'Chicken' sound manager script file
 
 const iBtnChickenPosX int <= 45;
-const iBtnChickenPosY int <= 450;
+const iBtnChickenPosY int <= 190;
 const iBtnChickenWidth int <= 190;
 const iBtnChickenHeight int <= 45;
-const iTxtChickenX int <= 105;
-const iTxtChickenY int <= 460;
+const iTxtChickenX int <= 87;
+const iTxtChickenY int <= 200;
 const szLabelChicken string <= "CHICKEN";
 
 global hSprChicken int;

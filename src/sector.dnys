@@ -1,11 +1,11 @@
 # AquaShell Counter-Strike Retroboard 'Sector' sound manager script file
 
-const iBtnSectorPosX int <= 45;
-const iBtnSectorPosY int <= 320;
+const iBtnSectorPosX int <= 265;
+const iBtnSectorPosY int <= 385;
 const iBtnSectorWidth int <= 190;
 const iBtnSectorHeight int <= 45;
-const iTxtSectorX int <= 90;
-const iTxtSectorY int <= 330;
+const iTxtSectorX int <= 315;
+const iTxtSectorY int <= 395;
 const szLabelSector string <= "SECTOR";
 
 global hSprSector int;

@@ -1,11 +1,11 @@
 # AquaShell Counter-Strike Retroboard 'Negative' sound manager script file
 
-const iBtnNegativePosX int <= 265;
-const iBtnNegativePosY int <= 190;
+const iBtnNegativePosX int <= 45;
+const iBtnNegativePosY int <= 320;
 const iBtnNegativeWidth int <= 190;
 const iBtnNegativeHeight int <= 45;
-const iTxtNegativeX int <= 299;
-const iTxtNegativeY int <= 200;
+const iTxtNegativeX int <= 80;
+const iTxtNegativeY int <= 330;
 const szLabelNegative string <= "NEGATIVE";
 
 global hSprNegative int;

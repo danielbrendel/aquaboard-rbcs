@@ -46,15 +46,15 @@ global bRunDrawOnce bool;
 array arrSoundScriptItems string 12 (
 	"affirmative",
 	"assistance",
+	"chicken",
 	"follow",
+	"hole",
+	"hostage",
 	"negative",
 	"report",
 	"rush",
 	"sector",
 	"spotted",
-	"hole",
-	"hostage",
-	"chicken",
 	"thunder"
 );
 

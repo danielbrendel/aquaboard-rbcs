@@ -1,11 +1,11 @@
 # AquaShell Counter-Strike Retroboard 'Rush' sound manager script file
 
-const iBtnRushPosX int <= 265;
-const iBtnRushPosY int <= 255;
+const iBtnRushPosX int <= 45;
+const iBtnRushPosY int <= 385;
 const iBtnRushWidth int <= 190;
 const iBtnRushHeight int <= 45;
-const iTxtRushX int <= 325;
-const iTxtRushY int <= 265;
+const iTxtRushX int <= 105;
+const iTxtRushY int <= 395;
 const szLabelRush string <= "RUSH";
 
 global hSprRush int;

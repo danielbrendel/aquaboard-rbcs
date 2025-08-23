@@ -1,10 +1,10 @@
 # AquaShell Counter-Strike Retroboard 'Follow' sound manager script file
 
-const iBtnFollowPosX int <= 45;
+const iBtnFollowPosX int <= 265;
 const iBtnFollowPosY int <= 190;
 const iBtnFollowWidth int <= 190;
 const iBtnFollowHeight int <= 45;
-const iTxtFollowX int <= 90;
+const iTxtFollowX int <= 312;
 const iTxtFollowY int <= 200;
 const szLabelFollow string <= "FOLLOW";
 

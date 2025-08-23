@@ -1,11 +1,11 @@
 # AquaShell Counter-Strike Retroboard 'Hole' sound manager script file
 
 const iBtnHolePosX int <= 45;
-const iBtnHolePosY int <= 385;
+const iBtnHolePosY int <= 255;
 const iBtnHoleWidth int <= 190;
 const iBtnHoleHeight int <= 45;
 const iTxtHoleX int <= 105;
-const iTxtHoleY int <= 395;
+const iTxtHoleY int <= 265;
 const szLabelHole string <= "HOLE";
 
 global hSprHole int;

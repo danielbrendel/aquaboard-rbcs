@@ -4,7 +4,7 @@ const iBtnThunderPosX int <= 265;
 const iBtnThunderPosY int <= 450;
 const iBtnThunderWidth int <= 190;
 const iBtnThunderHeight int <= 45;
-const iTxtThunderX int <= 310;
+const iTxtThunderX int <= 305;
 const iTxtThunderY int <= 460;
 const szLabelThunder string <= "THUNDER";
 
