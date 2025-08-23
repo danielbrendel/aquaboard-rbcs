@@ -1,0 +1,87 @@
+# AquaShell Counter-Strike Retroboard 'Hole' sound manager script file
+
+const iBtnHolePosX int <= 45;
+const iBtnHolePosY int <= 385;
+const iBtnHoleWidth int <= 190;
+const iBtnHoleHeight int <= 45;
+const iTxtHoleX int <= 105;
+const iTxtHoleY int <= 395;
+const szLabelHole string <= "HOLE";
+
+global hSprHole int;
+global hSndHole int;
+
+function checkButtonHovered_hole bool(btnx int, btny int, btnw int, btnh int)
+{
+	result false;
+	
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnHolePosX;
+	set chkbtnheight <= %iBtnHolePosY;
+
+	+= chkbtnwidth %iBtnHoleWidth;
+	+= chkbtnheight %iBtnHoleHeight;
+
+	if (%iMouseXPos, -gr, %iBtnHolePosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnHolePosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function checkButtonClicked_hole void(btnx int, btny int, btnw int, btnh int, callback string)
+{
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnHolePosX;
+	set chkbtnheight <= %iBtnHolePosY;
+
+	+= chkbtnwidth %iBtnHoleWidth;
+	+= chkbtnheight %iBtnHoleHeight;
+
+	if (%iMouseXPos, -gr, %iBtnHolePosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnHolePosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					dx.snd.play %hSndHole %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
+
+function drawButton_hole void()
+{
+	local iTxtColorRed int;
+	local iTxtColorGreen int;
+	local iTxtColorBlue int;
+	local bButtonHovered bool;
+	
+	set iTxtColorRed <= 250;
+	set iTxtColorGreen <= 250;
+	set iTxtColorBlue <= 250;
+	
+	dx.gfx.drawsprite %hSprHole %iBtnHolePosX %iBtnHolePosY 0 0.0 0.0 false 0 0 0 0;
+	
+	call checkButtonHovered_hole(%iBtnHolePosX, %iBtnHolePosY, %iBtnHoleWidth, %iBtnHoleHeight) => bButtonHovered;
+	if (%bButtonHovered, -eq, true) {
+		set iTxtColorRed <= 255;
+		set iTxtColorGreen <= 255;
+		set iTxtColorBlue <= 255;
+	};
+	
+	dx.gfx.drawstring %hDefFont "%szLabelHole" %iTxtHoleX %iTxtHoleY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
+};
+
+function loadAssets_hole void()
+{
+    dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnHoleWidth %iBtnHoleHeight 1 false hSprHole;
+    dx.snd.query "%szSoundPath/hole.wav" hSndHole;
+};

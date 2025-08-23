@@ -1,11 +1,11 @@
 # AquaShell Counter-Strike Retroboard 'Affirmative' sound manager script file
 
 const iBtnAffirmativePosX int <= 45;
-const iBtnAffirmativePosY int <= 135;
+const iBtnAffirmativePosY int <= 125;
 const iBtnAffirmativeWidth int <= 190;
 const iBtnAffirmativeHeight int <= 45;
 const iTxtAffirmativeX int <= 59;
-const iTxtAffirmativeY int <= 145;
+const iTxtAffirmativeY int <= 135;
 const szLabelAffirmative string <= "AFFIRMATIVE";
 
 global hSprAffirmative int;

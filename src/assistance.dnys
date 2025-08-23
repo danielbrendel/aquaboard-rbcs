@@ -1,11 +1,11 @@
 # AquaShell Counter-Strike Retroboard 'Assistance' sound manager script file
 
 const iBtnAssistancePosX int <= 265;
-const iBtnAssistancePosY int <= 135;
+const iBtnAssistancePosY int <= 125;
 const iBtnAssistanceWidth int <= 190;
 const iBtnAssistanceHeight int <= 45;
 const iTxtAssistanceX int <= 286;
-const iTxtAssistanceY int <= 145;
+const iTxtAssistanceY int <= 135;
 const szLabelAssistance string <= "ASSISTANCE";
 
 global hSprAssistance int;

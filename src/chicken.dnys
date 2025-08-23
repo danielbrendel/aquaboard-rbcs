@@ -1,0 +1,87 @@
+# AquaShell Counter-Strike Retroboard 'Chicken' sound manager script file
+
+const iBtnChickenPosX int <= 45;
+const iBtnChickenPosY int <= 450;
+const iBtnChickenWidth int <= 190;
+const iBtnChickenHeight int <= 45;
+const iTxtChickenX int <= 105;
+const iTxtChickenY int <= 460;
+const szLabelChicken string <= "CHICKEN";
+
+global hSprChicken int;
+global hSndChicken int;
+
+function checkButtonHovered_chicken bool(btnx int, btny int, btnw int, btnh int)
+{
+	result false;
+	
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnChickenPosX;
+	set chkbtnheight <= %iBtnChickenPosY;
+
+	+= chkbtnwidth %iBtnChickenWidth;
+	+= chkbtnheight %iBtnChickenHeight;
+
+	if (%iMouseXPos, -gr, %iBtnChickenPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnChickenPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function checkButtonClicked_chicken void(btnx int, btny int, btnw int, btnh int, callback string)
+{
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnChickenPosX;
+	set chkbtnheight <= %iBtnChickenPosY;
+
+	+= chkbtnwidth %iBtnChickenWidth;
+	+= chkbtnheight %iBtnChickenHeight;
+
+	if (%iMouseXPos, -gr, %iBtnChickenPosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnChickenPosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					dx.snd.play %hSndChicken %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
+
+function drawButton_chicken void()
+{
+	local iTxtColorRed int;
+	local iTxtColorGreen int;
+	local iTxtColorBlue int;
+	local bButtonHovered bool;
+	
+	set iTxtColorRed <= 250;
+	set iTxtColorGreen <= 250;
+	set iTxtColorBlue <= 250;
+	
+	dx.gfx.drawsprite %hSprChicken %iBtnChickenPosX %iBtnChickenPosY 0 0.0 0.0 false 0 0 0 0;
+	
+	call checkButtonHovered_chicken(%iBtnChickenPosX, %iBtnChickenPosY, %iBtnChickenWidth, %iBtnChickenHeight) => bButtonHovered;
+	if (%bButtonHovered, -eq, true) {
+		set iTxtColorRed <= 255;
+		set iTxtColorGreen <= 255;
+		set iTxtColorBlue <= 255;
+	};
+	
+	dx.gfx.drawstring %hDefFont "%szLabelChicken" %iTxtChickenX %iTxtChickenY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
+};
+
+function loadAssets_chicken void()
+{
+    dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnChickenWidth %iBtnChickenHeight 1 false hSprChicken;
+    dx.snd.query "%szSoundPath/chicken.wav" hSndChicken;
+};

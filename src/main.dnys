@@ -8,7 +8,7 @@ require "dx.sound";
 require "fileio";
 require "strings";
 
-hideconsole;
+#hideconsole;
 
 const WND_RES_X int <= 1024;
 const WND_RES_Y int <= 768;
@@ -43,7 +43,7 @@ global hSndLinkHover int;
 global hSndLinkClick int;
 global bRunDrawOnce bool;
 
-array arrSoundScriptItems string 8 (
+array arrSoundScriptItems string 12 (
 	"affirmative",
 	"assistance",
 	"follow",
@@ -51,7 +51,11 @@ array arrSoundScriptItems string 8 (
 	"report",
 	"rush",
 	"sector",
-	"spotted"
+	"spotted",
+	"hole",
+	"hostage",
+	"chicken",
+	"thunder"
 );
 
 array arrSprayLogos string 0 ();
@@ -69,8 +73,8 @@ for (i, 0, %arrSoundScriptItems.length, -inc) {
 exec "%szScriptPath/configs.dnys";
 exec "%szScriptPath/maps.dnys";
 
-set iLinkXPos <= 390;
-set iLinkYPos <= 723;
+set iLinkXPos <= 763;
+set iLinkYPos <= 738;
 set iLinkWidth <= 235;
 set iLinkHeight <= -15;
 
@@ -216,7 +220,7 @@ function DXWND_OnDraw void()
 
 	call drawSpraylogos() => void;
 
-	dx.gfx.drawstring %hInfoFont "This project is fan-made and is not affiliated with Valve or Steam" 250 693 255 255 255 255;
+	dx.gfx.drawstring %hInfoFont "This project is fan-made and is not affiliated with Valve or Steam" 10 738 255 255 255 255;
 	dx.gfx.drawstring %hInfoFont %INFO_WEBSITE %iLinkXPos %iLinkYPos %iLinkColorRed %iLinkColorGreen %iLinkColorBlue 255;
 
 	if (%bLinkHover, -eq, true) {

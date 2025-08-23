@@ -1,0 +1,98 @@
+# AquaShell Counter-Strike Retroboard 'Hostage' sound manager script file
+
+const iBtnHostagePosX int <= 265;
+const iBtnHostagePosY int <= 385;
+const iBtnHostageWidth int <= 190;
+const iBtnHostageHeight int <= 45;
+const iTxtHostageX int <= 310;
+const iTxtHostageY int <= 395;
+const szLabelHostage string <= "HOSTAGE";
+
+global hSprHostage int;
+
+array arrHostageSounds int 0 ();
+
+function checkButtonHovered_hostage bool(btnx int, btny int, btnw int, btnh int)
+{
+	result false;
+	
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	
+	set chkbtnwidth <= %iBtnHostagePosX;
+	set chkbtnheight <= %iBtnHostagePosY;
+
+	+= chkbtnwidth %iBtnHostageWidth;
+	+= chkbtnheight %iBtnHostageHeight;
+
+	if (%iMouseXPos, -gr, %iBtnHostagePosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnHostagePosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					result true;
+				};
+			};
+		};
+	};
+};
+
+function checkButtonClicked_hostage void(btnx int, btny int, btnw int, btnh int, callback string)
+{
+	local chkbtnwidth int;
+	local chkbtnheight int;
+	local iRndHostSound int;
+	
+	set chkbtnwidth <= %iBtnHostagePosX;
+	set chkbtnheight <= %iBtnHostagePosY;
+
+	+= chkbtnwidth %iBtnHostageWidth;
+	+= chkbtnheight %iBtnHostageHeight;
+
+	if (%iMouseXPos, -gr, %iBtnHostagePosX) {
+		if (%iMouseXPos, -ls, %chkbtnwidth) {
+			if (%iMouseYPos, -gr, %iBtnHostagePosY) {
+				if (%iMouseYPos, -ls, %chkbtnheight) {
+					random 0 %arrHostageSounds.length iRndHostSound;
+	
+					dx.snd.play %arrHostageSounds[%iRndHostSound] %GLOBAL_VOLUME;
+				};
+			};
+		};
+	};
+};
+
+function drawButton_hostage void()
+{
+	local iTxtColorRed int;
+	local iTxtColorGreen int;
+	local iTxtColorBlue int;
+	local bButtonHovered bool;
+	
+	set iTxtColorRed <= 250;
+	set iTxtColorGreen <= 250;
+	set iTxtColorBlue <= 250;
+	
+	dx.gfx.drawsprite %hSprHostage %iBtnHostagePosX %iBtnHostagePosY 0 0.0 0.0 false 0 0 0 0;
+	
+	call checkButtonHovered_hostage(%iBtnHostagePosX, %iBtnHostagePosY, %iBtnHostageWidth, %iBtnHostageHeight) => bButtonHovered;
+	if (%bButtonHovered, -eq, true) {
+		set iTxtColorRed <= 255;
+		set iTxtColorGreen <= 255;
+		set iTxtColorBlue <= 255;
+	};
+	
+	dx.gfx.drawstring %hDefFont "%szLabelHostage" %iTxtHostageX %iTxtHostageY %iTxtColorRed %iTxtColorGreen %iTxtColorBlue 255;
+};
+
+function loadAssets_hostage void()
+{
+	local hSndHostage int;
+
+    dx.gfx.loadsprite "%szSpritePath/button.png" 1 %iBtnHostageWidth %iBtnHostageHeight 1 false hSprHostage;
+
+	for (i, 1, 6, -inc) {
+    	dx.snd.query "%szSoundPath/hos%i.wav" hSndHostage;
+
+		array_item_append arrHostageSounds %hSndHostage;
+	};
+};

@@ -1,11 +1,11 @@
 # AquaShell Counter-Strike Retroboard 'Report' sound manager script file
 
 const iBtnReportPosX int <= 45;
-const iBtnReportPosY int <= 265;
+const iBtnReportPosY int <= 255;
 const iBtnReportWidth int <= 190;
 const iBtnReportHeight int <= 45;
 const iTxtReportX int <= 90;
-const iTxtReportY int <= 275;
+const iTxtReportY int <= 265;
 const szLabelReport string <= "REPORT";
 
 global hSprReport int;

@@ -1,7 +1,7 @@
 # AquaShell Counter-Strike Retroboard maps showcase manager script file
 
 const MAPS_WINDOW_POSX int <= 50;
-const MAPS_WINDOW_POSY int <= 435;
+const MAPS_WINDOW_POSY int <= 520;
 const MAPS_TIMER_DELAY int <= 10000;
 
 global iCurrentIndex int;

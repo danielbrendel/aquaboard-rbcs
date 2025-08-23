@@ -1,9 +1,9 @@
 # AquaShell Counter-Strike Retroboard config sources manager script file
 
 const CONFIGS_WINDOW_POSX int <= 550;
-const CONFIGS_WINDOW_POSY int <= 135;
+const CONFIGS_WINDOW_POSY int <= 125;
 const CONFIGS_WINDOW_WIDTH int <= 415;
-const CONFIGS_WINDOW_HEIGHT int <= 495;
+const CONFIGS_WINDOW_HEIGHT int <= 592;
 const CONFIGS_WINDOW_BORDER_SIZE int <= 6;
 const CONFIGS_TIMER_DELAY int <= 20000;
 

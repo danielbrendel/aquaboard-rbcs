@@ -1,11 +1,11 @@
 # AquaShell Counter-Strike Retroboard 'Spotted' sound manager script file
 
 const iBtnSpottedPosX int <= 265;
-const iBtnSpottedPosY int <= 330;
+const iBtnSpottedPosY int <= 320;
 const iBtnSpottedWidth int <= 190;
 const iBtnSpottedHeight int <= 45;
 const iTxtSpottedX int <= 310;
-const iTxtSpottedY int <= 340;
+const iTxtSpottedY int <= 330;
 const szLabelSpotted string <= "SPOTTED";
 
 global hSprSpotted int;
