@@ -11,10 +11,12 @@ hideconsole;
 
 const WND_RES_X int <= 1024;
 const WND_RES_Y int <= 768;
+const WND_WINDOWED bool <= true;
 const INVALID_DX_HANDLE int <= -1;
 const GLOBAL_VOLUME int <= 10;
 const MAX_BACKGROUND_IMAGES int <= 10;
 const MAX_WELCOME_SOUNDS int <= 5;
+const KEY_SPRAYLOGO int <= 70;
 const INFO_WEBSITE string <= "www.aquashell-scripting.com";
 
 global szScriptPath string;
@@ -25,6 +27,8 @@ global bDxValid bool;
 global hDefFont int;
 global hInfoFont int;
 global hBanner int;
+global hSpraylogo int;
+global hSndSprayer int;
 global hSndWelcome int;
 global iMouseXPos int;
 global iMouseYPos int;
@@ -48,6 +52,8 @@ array arrSoundScriptItems string 8 (
 	"sector",
 	"spotted"
 );
+
+array arrSprayLogos string 0 ();
 
 getscriptpath szScriptPath;
 
@@ -75,6 +81,23 @@ function PlayWelcomeSound_OnElapsed bool()
 	dx.snd.play %hSndWelcome %GLOBAL_VOLUME;
 
 	result false;
+};
+
+function drawSpraylogos void()
+{
+	local sprayx int;
+	local sprayy int;
+
+	for (i, 0, %arrSprayLogos.length, -inc) {
+		s_tokenize "%arrSprayLogos[%i]" "x" tokSprayLogoPos;
+
+		set sprayx <= %tokSprayLogoPos[0];
+		set sprayy <= %tokSprayLogoPos[1];
+
+		dx.gfx.drawsprite %hSpraylogo %sprayx %sprayy 0 0.0 0.0 false 0 0 0 0;
+
+		s_cleartokens tokSprayLogoPos;
+	};
 };
 
 function checkLinkRange bool()
@@ -125,6 +148,7 @@ function DXWND_OnCreate void(hWnd int)
 	dx.gfx.setbgimage "%szSpritePath/background%iRndNumber.png";
 
 	dx.gfx.loadsprite "%szSpritePath/banner.png" 1 %WND_RES_X 96 1 false hBanner;
+	dx.gfx.loadsprite "%szSpritePath/spraylogo.png" 1 64 64 1 false hSpraylogo;
 
 	for (i, 0, %arrSoundScriptItems.length, -inc) {
 		call loadAssets_%arrSoundScriptItems[%i]() => void;
@@ -136,6 +160,7 @@ function DXWND_OnCreate void(hWnd int)
 	random 1 %MAX_WELCOME_SOUNDS iRndNumber;
 	dx.snd.query "%szSoundPath/welcome%iRndNumber.wav" hSndWelcome;
 
+	dx.snd.query "%szSoundPath/sprayer.wav" hSndSprayer;
 	dx.snd.query "%szSoundPath/linkhover.wav" hSndLinkHover;
 	dx.snd.query "%szSoundPath/linkclick.wav" hSndLinkClick;
 
@@ -188,6 +213,8 @@ function DXWND_OnDraw void()
 		};
 	};
 
+	call drawSpraylogos() => void;
+
 	dx.gfx.drawstring %hInfoFont "This project is fan-made and is not affiliated with Valve or Steam" 250 693 255 255 255 255;
 	dx.gfx.drawstring %hInfoFont %INFO_WEBSITE %iLinkXPos %iLinkYPos %iLinkColorRed %iLinkColorGreen %iLinkColorBlue 255;
 
@@ -205,6 +232,22 @@ function DXWND_OnDraw void()
 
 function DXWND_OnKeyInput void(vKey int, bDown bool, bCtrlHeld bool, bShiftHeld bool, bAltHeld bool)
 {
+	local correctxpos int;
+	local correctypos int;
+
+	if (%vKey, -eq, %KEY_SPRAYLOGO) {
+		if (%bDown, -nt, true) {
+			set correctxpos <= %iMouseXPos;
+			set correctypos <= %iMouseYPos;
+
+			-= correctxpos 20;
+			-= correctypos 1;
+
+			array_item_append arrSprayLogos "%correctxposx%correctypos";
+
+			dx.snd.play %hSndSprayer %GLOBAL_VOLUME;
+		};
+	};
 };
 
 function DXWND_OnMouseInput void(x int, y int, iMouseKey int, bDown bool, bCtrlHeld bool, bShiftHeld bool, bAltHeld bool)
