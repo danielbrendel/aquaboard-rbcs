@@ -18,6 +18,17 @@ const GLOBAL_VOLUME int <= 10;
 const MAX_BACKGROUND_IMAGES int <= 10;
 const MAX_WELCOME_SOUNDS int <= 5;
 const KEY_SPRAYLOGO int <= 70;
+const KEY_USAGE int <= 69;
+const KEY_SLOT_1 int <= 49;
+const KEY_SLOT_2 int <= 50;
+const KEY_SLOT_3 int <= 51;
+const KEY_SLOT_4 int <= 52;
+const KEY_SLOT_5 int <= 53;
+const KEY_SLOT_6 int <= 54;
+const KEY_SLOT_7 int <= 55;
+const KEY_SLOT_8 int <= 56;
+const KEY_SLOT_9 int <= 57;
+const KEY_SLOT_0 int <= 48;
 const INFO_WEBSITE string <= "www.aquashell-scripting.com";
 
 global szScriptPath string;
@@ -58,6 +69,19 @@ array arrSoundScriptItems string 12 (
 	"thunder"
 );
 
+array arrWeaponSlots int 10 (
+	%KEY_SLOT_1,
+	%KEY_SLOT_2,
+	%KEY_SLOT_3,
+	%KEY_SLOT_4,
+	%KEY_SLOT_5,
+	%KEY_SLOT_6,
+	%KEY_SLOT_7,
+	%KEY_SLOT_8,
+	%KEY_SLOT_9,
+	%KEY_SLOT_0
+);
+
 array arrSprayLogos string 0 ();
 
 getscriptpath szScriptPath;
@@ -73,6 +97,7 @@ for (i, 0, %arrSoundScriptItems.length, -inc) {
 exec "%szScriptPath/configs.dnys";
 exec "%szScriptPath/maps.dnys";
 exec "%szScriptPath/bomb.dnys";
+exec "%szScriptPath/guns.dnys";
 
 set iLinkXPos <= 763;
 set iLinkYPos <= 738;
@@ -163,6 +188,7 @@ function DXWND_OnCreate void(hWnd int)
 	call loadConfigItem("%szConfigsPath") => void;
 	call loadMapShowcase("%szSpritePath") => void;
 	call loadBombComponent("%szSpritePath", "%szSoundPath") => void;
+	call loadGunItems("%szSpritePath", "%szSoundPath") => void;
 
 	random 1 %MAX_WELCOME_SOUNDS iRndNumber;
 	dx.snd.query "%szSoundPath/welcome%iRndNumber.wav" hSndWelcome;
@@ -199,6 +225,7 @@ function DXWND_OnDraw void()
 	call drawConfigLines() => void;
 	call drawMapShowcase() => void;
 	call drawBomb() => void;
+	call drawShots() => void;
 
 	call checkLinkRange() => bLinkHover;
 	if (%bLinkHover, -eq, true) {
@@ -242,6 +269,7 @@ function DXWND_OnKeyInput void(vKey int, bDown bool, bCtrlHeld bool, bShiftHeld 
 {
 	local correctxpos int;
 	local correctypos int;
+	local bDefusalFlag bool;
 
 	if (%vKey, -eq, %KEY_SPRAYLOGO) {
 		if (%bDown, -nt, true) {
@@ -254,6 +282,26 @@ function DXWND_OnKeyInput void(vKey int, bDown bool, bCtrlHeld bool, bShiftHeld 
 			array_item_append arrSprayLogos "%correctxposx%correctypos";
 
 			dx.snd.play %hSndSprayer %GLOBAL_VOLUME;
+		};
+	} elseif (%vKey, -eq, %KEY_USAGE) {
+		if (%bDown, -eq, false) {
+			call isBombCurrentlyBeingDefused() => bDefusalFlag;
+			if (%bDefusalFlag, -eq, true) {
+				call stopDefusal() => void;
+			};
+		} else {
+			call cursorOnBomb() => bDefusalFlag;
+			if (%bDefusalFlag, -eq, true) {
+				call defuseBomb() => void;
+			};
+		};
+	} else {
+		for (cntkeyslot, 0, %arrWeaponSlots.length, -inc) {
+			if (%vKey, -eq, %arrWeaponSlots[%cntkeyslot]) {
+				if (%bDown, -nt, true) {
+					call switchGun(%cntkeyslot) => void;
+				};
+			};
 		};
 	};
 };
@@ -279,6 +327,10 @@ function DXWND_OnMouseInput void(x int, y int, iMouseKey int, bDown bool, bCtrlH
 				dx.snd.play %hSndLinkClick %GLOBAL_VOLUME;
 				sys "start https://%INFO_WEBSITE";
 			};
+		};
+	} elseif (%iMouseKey, -eq, 2) {
+		if (%bDown, -eq, true) {
+			call fireGun(%iMouseXPos, %iMouseYPos) => void;
 		};
 	} elseif (%iMouseKey, -eq, 4) {
 		if (%bDown, -eq, false) {

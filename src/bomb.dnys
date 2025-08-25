@@ -5,15 +5,20 @@ const FLARE_TIMER_DELAY int <= 250;
 const WARNING_COUNTER int <= 9;
 const IGNITION_COUNTER int <= 10;
 const BOOM_TIMER_DELAY int <= 1;
+const DEFUSAL_TIMER_DELAY int <= 500;
+const DEFUSAL_MAX_PERCENT int <= 100;
 
 global bBombPlanted bool;
 global iBombCounter int;
 global bFlareVisible bool;
 global bInDetonation bool;
+global bInDefusal bool;
 global iExplCounter int;
+global iDefusalPercent int;
 global iBombXPos int;
 global iBombYPos int;
 global hSprBomb int;
+global hSprDefuser int;
 global hSprFlare int;
 global hSprExplosion int;
 global hSprDecal int;
@@ -22,11 +27,17 @@ global hSndRadio int;
 global hSndBeep int;
 global hSndWarning int;
 global hSndExplode int;
+global hSndDefusal int;
+global hSndDefused int;
 
 array arrDecalList string 0 ();
 
 set bBombPlanted <= false;
+set bInDetonation <= false;
+set bInDefusal <= false;
 set iBombCounter <= 0;
+set iExplCounter <= 0;
+set iDefusalPercent <= 0;
 
 function BombTimer_OnElapsed bool()
 {
@@ -43,7 +54,7 @@ function BombTimer_OnElapsed bool()
         };
     };
 
-	result true;
+	result %bBombPlanted;
 };
 
 function BoomTimer_OnElapsed bool()
@@ -65,12 +76,59 @@ function FlareTimer_OnElapsed bool()
 	result false;
 };
 
+function DefusalTimer_OnElapsed bool()
+{
+    if (%bInDetonation, -nt, true) {
+        += iDefusalPercent 10;
+        if (%iDefusalPercent, -gre, %DEFUSAL_MAX_PERCENT) {
+            set bInDefusal <= false;
+            set bInDetonation <= false;
+            set bBombPlanted <= false;
+
+            dx.snd.play %hSndDefused %GLOBAL_VOLUME;
+        };
+    };
+
+    result %bInDefusal;
+};
+
+function cursorOnBomb bool()
+{
+    result false;
+
+    local chkbombframeposx int;
+    local chkbombframeposy int;
+    local chkbombframewidth int;
+	local chkbombframeheight int;
+	
+    set chkbombframeposx <= %iBombXPos;
+    set chkbombframeposy <= %iBombYPos;
+	set chkbombframewidth <= %iBombXPos;
+	set chkbombframeheight <= %iBombYPos;
+
+    += chkbombframeposx 10;
+    -= chkbombframeposy 20;
+	+= chkbombframewidth 65;
+	+= chkbombframeheight 40;
+
+	if (%iMouseXPos, -gr, %chkbombframeposx) {
+		if (%iMouseXPos, -ls, %chkbombframewidth) {
+			if (%iMouseYPos, -gr, %chkbombframeposy) {
+				if (%iMouseYPos, -ls, %chkbombframeheight) {
+                    result true;
+				};
+			};
+		};
+	};
+};
+
 function plantBomb void(bombxpos int, bombypos int)
 {
     if (%bBombPlanted, -eq, false) {
         set bBombPlanted <= true;
         set bFlareVisible <= false;
         set bInDetonation <= false;
+        set bInDefusal <= false;
         set iBombCounter <= 0;
         set iExplCounter <= 0;
 
@@ -108,10 +166,43 @@ function explodeBomb void()
     aut_addtimer BoomTimer %BOOM_TIMER_DELAY;
 };
 
+function defuseBomb void()
+{
+    if (%bBombPlanted, -eq, true) {
+        if (%bInDetonation, -eq, false) {
+            if (%bInDefusal, -eq, false) {
+                set bInDefusal <= true;
+                set iDefusalPercent <= 0;
+
+                dx.snd.play %hSndDefusal %GLOBAL_VOLUME;
+
+                aut_addtimer DefusalTimer %DEFUSAL_TIMER_DELAY;
+            };
+        };
+    };
+};
+
+function stopDefusal void()
+{
+    if (%bInDefusal, -eq, true) {
+        set bInDefusal <= false;
+        set iDefusalPercent <= 0;
+    };
+};
+
+function isBombCurrentlyBeingDefused bool()
+{
+    result %bInDefusal;
+};
+
 function drawBomb void()
 {
     local corrflareposx int;
     local corrflareposy int;
+    local isbombhovered bool;
+    local corrtoolposx int;
+    local corrtoolposy int;
+    local currpercentwidth int;
 
     call drawDecals() => void;
 
@@ -128,6 +219,28 @@ function drawBomb void()
 
                 dx.gfx.drawsprite %hSprFlare %corrflareposx %corrflareposy 0 0.0 0.0 false 0 0 0 0;
             };
+
+            call cursorOnBomb() => isbombhovered;
+            if (%isbombhovered, -eq, true) {
+                set corrtoolposx <= %iBombXPos;
+                set corrtoolposy <= %iBombYPos;
+
+                += corrtoolposx 60;
+                -= corrtoolposy 20;
+
+                dx.gfx.drawsprite %hSprDefuser %corrtoolposx %corrtoolposy 0 0.0 0.7 false 0 0 0 0;
+            };
+        };
+    };
+
+    if (%bInDefusal, -eq, true) {
+        if (%bInDetonation, -nt, true) {
+            set currpercentwidth <= %iDefusalPercent;
+            *= currpercentwidth 393;
+            /= currpercentwidth 100;
+            
+            dx.gfx.drawbox 300 373 400 19 3 203 123 35 150;
+            dx.gfx.drawfilledbox 305 378 %currpercentwidth 12 203 123 35 150;
         };
     };
 
@@ -176,10 +289,13 @@ function loadBombComponent void(spriteBasePath string, soundBasePath string)
     dx.gfx.loadsprite "%spriteBasePath\flare.png" 1 100 100 1 false hSprFlare;
     dx.gfx.loadsprite "%spriteBasePath\explosion.png" 64 512 512 8 false hSprExplosion;
     dx.gfx.loadsprite "%spriteBasePath\decal.png" 1 512 512 1 false hSprDecal;
+    dx.gfx.loadsprite "%spriteBasePath\defuser.png" 1 32 44 1 false hSprDefuser;
 
     dx.snd.query "%soundBasePath/c4_plant.wav" hSndPlanted;
     dx.snd.query "%soundBasePath/c4_plradio.wav" hSndRadio;
     dx.snd.query "%soundBasePath/c4_beep.wav" hSndBeep;
     dx.snd.query "%soundBasePath/c4_warning.wav" hSndWarning;
     dx.snd.query "%soundBasePath/c4_explode.wav" hSndExplode;
+    dx.snd.query "%soundBasePath/c4_defusal.wav" hSndDefusal;
+    dx.snd.query "%soundBasePath/c4_defused.wav" hSndDefused;
 };

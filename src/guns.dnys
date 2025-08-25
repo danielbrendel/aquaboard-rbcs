@@ -1,0 +1,79 @@
+# AquaShell Counter-Strike Retroboard guns manager script file
+
+global hSprShot int;
+global hSndGunSwitch int;
+global iSelectedGun int;
+
+array arrGunList string 10 (
+    "gun_ak47",
+    "gun_aug",
+    "gun_awp",
+    "gun_deagle",
+    "gun_elite",
+    "gun_glock",
+    "gun_m4a1",
+    "gun_mp5",
+    "gun_scout",
+    "gun_usp"
+);
+
+array arrGunSounds int 0 ();
+array arrShotList string 0 ();
+
+function fireGun void(targetx int, targety int)
+{
+    local corrdclposx int;
+    local corrdclposy int;
+
+    set corrdclposx <= %targetx;
+    set corrdclposy <= %targety;
+
+    += corrdclposx 2;
+    += corrdclposy 10;
+
+    array_item_append arrShotList "%corrdclposxx%corrdclposy";
+
+    dx.snd.play %arrGunSounds[%iSelectedGun] %GLOBAL_VOLUME;
+};
+
+function drawShots void()
+{
+    for (i, 0, %arrShotList.length, -inc) {
+		s_tokenize "%arrShotList[%i]" "x" tokShotPos;
+
+		dx.gfx.drawsprite %hSprShot %tokShotPos[0] %tokShotPos[1] 0 0.0 0.0 false 0 0 0 0;
+
+		s_cleartokens tokShotPos;
+	};
+};
+
+function switchGun void(slot int)
+{
+    if (%slot, -ls, 0) {
+        set slot <= 0;
+    } elseif (%slot, -gre, %arrGunList.length) {
+        set slot <= %arrGunList.length;
+        -- slot;
+    };
+
+    if (%slot, -nt, %iSelectedGun) {
+        set iSelectedGun <= %slot;
+        dx.snd.play %hSndGunSwitch %GLOBAL_VOLUME;
+    };
+};
+
+function loadGunItems void(spriteBasePath string, soundBasePath string)
+{
+    local hSndGun int;
+
+    dx.gfx.loadsprite "%spriteBasePath\shot.png" 1 10 10 1 false hSprShot;
+
+    for (cntgun, 0, %arrGunList.length, -inc) {
+        dx.snd.query "%soundBasePath/%arrGunList[%cntgun].wav" hSndGun;
+        array_item_append arrGunSounds %hSndGun;
+    };
+
+    dx.snd.query "%soundBasePath/gun_switch.wav" hSndGunSwitch;
+
+    set iSelectedGun <= 0;
+};
