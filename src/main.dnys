@@ -72,6 +72,7 @@ for (i, 0, %arrSoundScriptItems.length, -inc) {
 
 exec "%szScriptPath/configs.dnys";
 exec "%szScriptPath/maps.dnys";
+exec "%szScriptPath/bomb.dnys";
 
 set iLinkXPos <= 763;
 set iLinkYPos <= 738;
@@ -161,6 +162,7 @@ function DXWND_OnCreate void(hWnd int)
 
 	call loadConfigItem("%szConfigsPath") => void;
 	call loadMapShowcase("%szSpritePath") => void;
+	call loadBombComponent("%szSpritePath", "%szSoundPath") => void;
 
 	random 1 %MAX_WELCOME_SOUNDS iRndNumber;
 	dx.snd.query "%szSoundPath/welcome%iRndNumber.wav" hSndWelcome;
@@ -196,6 +198,7 @@ function DXWND_OnDraw void()
 
 	call drawConfigLines() => void;
 	call drawMapShowcase() => void;
+	call drawBomb() => void;
 
 	call checkLinkRange() => bLinkHover;
 	if (%bLinkHover, -eq, true) {
@@ -276,6 +279,10 @@ function DXWND_OnMouseInput void(x int, y int, iMouseKey int, bDown bool, bCtrlH
 				dx.snd.play %hSndLinkClick %GLOBAL_VOLUME;
 				sys "start https://%INFO_WEBSITE";
 			};
+		};
+	} elseif (%iMouseKey, -eq, 4) {
+		if (%bDown, -eq, false) {
+			call plantBomb(%iMouseXPos, %iMouseYPos) => void;
 		};
 	};
 };

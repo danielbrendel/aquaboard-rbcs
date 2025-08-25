@@ -1,0 +1,185 @@
+# AquaShell Counter-Strike Retroboard bomb manager script file
+
+const BOMB_TIMER_DELAY int <= 2000;
+const FLARE_TIMER_DELAY int <= 250;
+const WARNING_COUNTER int <= 9;
+const IGNITION_COUNTER int <= 10;
+const BOOM_TIMER_DELAY int <= 1;
+
+global bBombPlanted bool;
+global iBombCounter int;
+global bFlareVisible bool;
+global bInDetonation bool;
+global iExplCounter int;
+global iBombXPos int;
+global iBombYPos int;
+global hSprBomb int;
+global hSprFlare int;
+global hSprExplosion int;
+global hSprDecal int;
+global hSndPlanted int;
+global hSndRadio int;
+global hSndBeep int;
+global hSndWarning int;
+global hSndExplode int;
+
+array arrDecalList string 0 ();
+
+set bBombPlanted <= false;
+set iBombCounter <= 0;
+
+function BombTimer_OnElapsed bool()
+{
+    if (%bInDetonation, -eq, false) {
+        ++ iBombCounter;
+        if (%iBombCounter, -eq, %WARNING_COUNTER) {
+            dx.snd.play %hSndWarning %GLOBAL_VOLUME;
+        } elseif (%iBombCounter, -gre, %IGNITION_COUNTER) {
+            call explodeBomb() => void;
+        } else {
+            set bFlareVisible <= true;
+            dx.snd.play %hSndBeep %GLOBAL_VOLUME;
+            aut_addtimer FlareTimer %FLARE_TIMER_DELAY;
+        };
+    };
+
+	result true;
+};
+
+function BoomTimer_OnElapsed bool()
+{
+    result true;
+
+    ++ iExplCounter;
+    if (%iExplCounter, -gre, 64) {
+        set bBombPlanted <= false;
+
+        result false;
+    };
+};
+
+function FlareTimer_OnElapsed bool()
+{
+	set bFlareVisible <= false;
+
+	result false;
+};
+
+function plantBomb void(bombxpos int, bombypos int)
+{
+    if (%bBombPlanted, -eq, false) {
+        set bBombPlanted <= true;
+        set bFlareVisible <= false;
+        set bInDetonation <= false;
+        set iBombCounter <= 0;
+        set iExplCounter <= 0;
+
+        set iBombXPos <= %bombxpos;
+        set iBombYPos <= %bombypos;
+
+        -= iBombXPos 40;
+        += iBombYPos 1;
+
+        aut_addtimer BombTimer %BOMB_TIMER_DELAY;
+
+        dx.snd.play %hSndPlanted %GLOBAL_VOLUME;
+        dx.snd.play %hSndRadio %GLOBAL_VOLUME;
+    };
+};
+
+function explodeBomb void()
+{
+    local corrdclposx int;
+    local corrdclposy int;
+
+    set bInDetonation <= true;
+    set iExplCounter <= 0;
+
+    set corrdclposx <= %iBombXPos;
+    set corrdclposy <= %iBombYPos;
+
+    -= corrdclposx 20;
+    -= corrdclposy 1;
+
+    dx.snd.play %hSndExplode %GLOBAL_VOLUME;
+
+    array_item_append arrDecalList "%corrdclposxx%corrdclposy";
+
+    aut_addtimer BoomTimer %BOOM_TIMER_DELAY;
+};
+
+function drawBomb void()
+{
+    local corrflareposx int;
+    local corrflareposy int;
+
+    call drawDecals() => void;
+
+    if (%bBombPlanted, -eq, true) {
+        if (%bInDetonation, -eq, false) {
+            dx.gfx.drawsprite %hSprBomb %iBombXPos %iBombYPos 0 0.5 0.5 false 0 0 0 0;
+
+            if (%bFlareVisible, -eq, true) {
+                set corrflareposx <= %iBombXPos;
+                set corrflareposy <= %iBombYPos;
+
+                += corrflareposx 1;
+                -= corrflareposy 20;
+
+                dx.gfx.drawsprite %hSprFlare %corrflareposx %corrflareposy 0 0.0 0.0 false 0 0 0 0;
+            };
+        };
+    };
+
+    if (%bInDetonation, -eq, true) {
+        call drawExplosion() => void;
+    };
+};
+
+function drawExplosion void()
+{
+    local explx int;
+    local exply int;
+
+    set explx <= %iBombXPos;
+    set exply <= %iBombYPos;
+
+    -= explx 200;
+    -= exply 200;
+
+    dx.gfx.drawsprite %hSprExplosion %explx %exply %iExplCounter 1.5 2.0 false 0 0 0 0;
+};
+
+function drawDecals void()
+{
+    local dclx int;
+    local dcly int;
+
+    for (i, 0, %arrDecalList.length, -inc) {
+		s_tokenize "%arrDecalList[%i]" "x" tokDecalPos;
+
+		set dclx <= %tokDecalPos[0];
+		set dcly <= %tokDecalPos[1];
+
+        -= dclx 200;
+        -= dcly 200;
+
+		dx.gfx.drawsprite %hSprDecal %dclx %dcly 0 0.0 0.0 false 0 0 0 0;
+
+		s_cleartokens tokDecalPos;
+	};
+};
+
+function loadBombComponent void(spriteBasePath string, soundBasePath string)
+{
+    dx.gfx.loadsprite "%spriteBasePath\c4.png" 1 100 58 1 false hSprBomb;
+    dx.gfx.loadsprite "%spriteBasePath\flare.png" 1 100 100 1 false hSprFlare;
+    dx.gfx.loadsprite "%spriteBasePath\explosion.png" 64 512 512 8 false hSprExplosion;
+    dx.gfx.loadsprite "%spriteBasePath\decal.png" 1 512 512 1 false hSprDecal;
+
+    dx.snd.query "%soundBasePath/c4_plant.wav" hSndPlanted;
+    dx.snd.query "%soundBasePath/c4_plradio.wav" hSndRadio;
+    dx.snd.query "%soundBasePath/c4_beep.wav" hSndBeep;
+    dx.snd.query "%soundBasePath/c4_warning.wav" hSndWarning;
+    dx.snd.query "%soundBasePath/c4_explode.wav" hSndExplode;
+};
